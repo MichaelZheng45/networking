@@ -168,7 +168,7 @@ void a3demoTestrender(a3_DemoState const* demoState) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	
 	//Draw some textuals
-	a3textDraw(demoState->text, 0, 0, 0, 1, 1, 1, 1, "%f", (float)demoState->renderTimer->totalTime);
+	a3textDraw(demoState->text, 0, 0, -1, 1, 1,1, 1, "%+.3lf", demoState->renderTimer->totalTime);
 }
 
 //-----------------------------------------------------------------------------
@@ -181,7 +181,30 @@ void a3demoTestrender(a3_DemoState const* demoState) {
 //	you're happy with it: 
 //	"<root>/resource/animal3D-data/animal3D-demoinfo.txt"
 
+void a3demoTestNetworking_receive(a3_DemoState* demoState)
+{
+	//Do networking
+	RakNet::Packet* packet;
+	for (packet = demoState->peer->Receive(); packet; demoState->peer->DeallocatePacket(packet), packet = demoState->peer->Receive())
+	{
 
+	}
+}
+
+void a3demoTestNetworking_send(a3_DemoState* demoState)
+{
+	//Do networking
+}
+
+void a3demoTestInput(a3_DemoState* demoState)
+{
+
+}
+
+void a3demoTestUpdate(a3_DemoState* demoState)
+{
+
+}
 
 
 #ifdef __cplusplus
@@ -273,6 +296,17 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hot
 		a3fileStreamMakeDirectory("./data");
 
 
+		if (!demoState->peer)
+		{
+			//setup
+			demoState->peer = RakNet::RakPeerInterface::GetInstance();
+			if (demoState->peer)
+			{
+				//initialize
+			}
+		}
+
+
 		//// set default GL state
 		//a3demo_setDefaultGraphicsState();
 
@@ -317,6 +351,12 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_unload(a3_DemoState *demoState, a3boolean h
 		// erase other stuff
 		a3trigFree();
 
+		if (demoState->peer)
+		{
+			RakNet::RakPeerInterface::DestroyInstance(demoState->peer);
+			demoState->peer = 0;
+		}
+
 		// erase persistent state
 		free(demoState);
 		demoState = 0;
@@ -347,7 +387,13 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 		/*	a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
 			a3demo_input(demoState, demoState->renderTimer->secondsPerTick);
 			a3demo_render(demoState);*/
+
+			a3demoTestInput(demoState);
+			a3demoTestNetworking_receive(demoState);
+			a3demoTestUpdate(demoState);
+			a3demoTestNetworking_send(demoState);
 			a3demoTestrender(demoState);
+
 			// update input
 			a3mouseUpdate(demoState->mouse);
 			a3keyboardUpdate(demoState->keyboard);
