@@ -1,0 +1,3 @@
+Add function definition of event manager and list node
+set up architecture in network manager to send and recieve events
+set up game stuff

@@ -64,6 +64,30 @@
     <Filter Include="Header Files\A3_DEMO\a3_Networking">
       <UniqueIdentifier>{79efcec7-253f-492b-a0c4-f342128cf5f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\common\A3_DEMO\a3_Networking\Events">
+      <UniqueIdentifier>{99100e5e-528f-4ad7-9d66-4e3466f26b97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common\A3_DEMO\a3_Networking\Events\EventNode">
+      <UniqueIdentifier>{10db4002-bc6e-4d42-ab8a-ca4224dcea59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common\A3_DEMO\a3_Networking\Events\EventStructures">
+      <UniqueIdentifier>{8839d219-0020-4392-b2af-a1c2dc891192}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\A3_DEMO\a3_Networking\Events">
+      <UniqueIdentifier>{717c3e38-3811-49e9-9bc6-f767d6feabe4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\A3_DEMO\a3_Networking\Events\EventNode">
+      <UniqueIdentifier>{fee058bf-d93f-493e-8e2e-506b259e1001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\A3_DEMO\a3_Networking\Events\EventStructures">
+      <UniqueIdentifier>{c733088b-6607-4c22-a6f0-b666686a8098}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\A3_DEMO\Game">
+      <UniqueIdentifier>{0c63daf4-aa44-485c-966d-54726767f71d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common\A3_DEMO\Game">
+      <UniqueIdentifier>{37ce87df-8e32-424a-957e-7b9da0a8b1c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_src_win\main_dll.c">
@@ -111,6 +135,21 @@
     <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_demo_callbacks.c">
       <Filter>Source Files\common\A3_DEMO</Filter>
     </ClCompile>
+    <ClCompile Include="EventList.cpp">
+      <Filter>Source Files\common\A3_DEMO\a3_Networking\Events\EventStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>Source Files\common\A3_DEMO\a3_Networking\Events\EventStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="NetEvent.cpp">
+      <Filter>Source Files\common\A3_DEMO\a3_Networking\Events\EventNode</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files\common\A3_DEMO\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveEvent.cpp">
+      <Filter>Source Files\common\A3_DEMO\a3_Networking\Events\EventNode</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\a3_dylib_config_export.h">
@@ -130,6 +169,24 @@
     </ClInclude>
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_NetworkingManager.h">
       <Filter>Header Files\A3_DEMO\a3_Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>Header Files\A3_DEMO\a3_Networking\Events\EventStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="EventList.h">
+      <Filter>Header Files\A3_DEMO\a3_Networking\Events\EventStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="NetEvent.h">
+      <Filter>Header Files\A3_DEMO\a3_Networking\Events\EventNode</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkDataSource.h">
+      <Filter>Header Files\A3_DEMO\a3_Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files\A3_DEMO\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveEvent.h">
+      <Filter>Header Files\A3_DEMO\a3_Networking\Events\EventNode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

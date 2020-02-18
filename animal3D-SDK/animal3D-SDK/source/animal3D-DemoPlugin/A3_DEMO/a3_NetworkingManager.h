@@ -25,12 +25,10 @@
 #ifndef __ANIMAL3D_NETWORKINGMANAGER_H
 #define __ANIMAL3D_NETWORKINGMANAGER_H
 
-
 //-----------------------------------------------------------------------------
 // animal3D framework includes
 
 #include "animal3D/animal3D.h"
-
 
 //-----------------------------------------------------------------------------
 
@@ -62,7 +60,6 @@ extern "C"
 
 	// shutdown networking
 	a3i32 a3netShutdown(a3_NetworkingManager* net);
-
 
 	// connect
 	a3i32 a3netConnect(a3_NetworkingManager* net, a3netAddressStr const ip);
