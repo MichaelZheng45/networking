@@ -1,0 +1,9 @@
+server already stores a list of ipaddress
+when a client connect, server sends back an index with getindexfromsystemaddress 
+
+an array with a struct that contains the name and the index of that user
+
+in send function has bool broadcast if on, will send message to all but one which is in the system address in the function
+there is a system address that is empty, use this if you want to broadcast to all
+
+
