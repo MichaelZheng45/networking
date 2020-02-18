@@ -44,7 +44,7 @@
 #include "_utilities/a3_DemoShaderProgram.h"
 
 #include "a3_NetworkingManager.h"
-
+#include "Game/Game.h"
 //-----------------------------------------------------------------------------
 
 #ifdef __cplusplus

@@ -1,8 +1,8 @@
 #ifndef  NETEVENT_H
 #define EVENT_H
 
-#include "NetworkDataSource.h"
-#include "Game.h"
+#include "A3_DEMO/a3_Networking/NetworkDataSource.h"
+#include "A3_DEMO/Game/Game.h"
 
 class NetEvent
 {

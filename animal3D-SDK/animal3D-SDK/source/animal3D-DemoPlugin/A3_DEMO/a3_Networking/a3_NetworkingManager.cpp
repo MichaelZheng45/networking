@@ -31,6 +31,11 @@
 #include "RakNet/BitStream.h"
 #include "RakNet/GetTime.h"
 
+#include "NetworkDataSource.h"
+#include "Events/EventStructures/EventManager.h"
+
+#include "Events/EventNodes/NetEvent.h"
+#include "Events/EventNodes/MoveEvent.h"
 //-----------------------------------------------------------------------------
 // networking stuff
 

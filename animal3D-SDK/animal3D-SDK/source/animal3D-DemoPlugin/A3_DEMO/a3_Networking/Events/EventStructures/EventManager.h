@@ -2,7 +2,6 @@
 #define EVENTMANAGER_H
 
 #include "EventList.h"
-#include "NetEvent.h"
 
 class EventManager
 {
@@ -10,7 +9,7 @@ class EventManager
 		EventManager();	
 		~EventManager();
 
-		int executeEvent(char* message, int bufferSize);
+		int executeEvent(Game* game, char* message, int bufferSize);
 		bool addEvent(NetEvent* newEvent);
 		int getListLength();
 

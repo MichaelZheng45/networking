@@ -1,7 +1,7 @@
 #ifndef EVENTLIST_H
 #define EVENTLIST_H
 
-#include "NetEvent.h"
+#include "A3_DEMO/a3_Networking/Events/EventNodes/NetEvent.h"
 
 class EventList
 {

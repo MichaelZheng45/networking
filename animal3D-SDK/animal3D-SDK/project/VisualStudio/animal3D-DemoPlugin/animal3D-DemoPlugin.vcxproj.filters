@@ -135,19 +135,19 @@
     <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_demo_callbacks.c">
       <Filter>Source Files\common\A3_DEMO</Filter>
     </ClCompile>
-    <ClCompile Include="EventList.cpp">
-      <Filter>Source Files\common\A3_DEMO\a3_Networking\Events\EventStructures</Filter>
-    </ClCompile>
-    <ClCompile Include="EventManager.cpp">
-      <Filter>Source Files\common\A3_DEMO\a3_Networking\Events\EventStructures</Filter>
-    </ClCompile>
-    <ClCompile Include="NetEvent.cpp">
-      <Filter>Source Files\common\A3_DEMO\a3_Networking\Events\EventNode</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
+    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\Game\Game.cpp">
       <Filter>Source Files\common\A3_DEMO\Game</Filter>
     </ClCompile>
-    <ClCompile Include="MoveEvent.cpp">
+    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\Events\EventStructures\EventList.cpp">
+      <Filter>Source Files\common\A3_DEMO\a3_Networking\Events\EventStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\Events\EventStructures\EventManager.cpp">
+      <Filter>Source Files\common\A3_DEMO\a3_Networking\Events\EventStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\Events\EventNodes\MoveEvent.cpp">
+      <Filter>Source Files\common\A3_DEMO\a3_Networking\Events\EventNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\Events\EventNodes\NetEvent.cpp">
       <Filter>Source Files\common\A3_DEMO\a3_Networking\Events\EventNode</Filter>
     </ClCompile>
   </ItemGroup>
@@ -170,23 +170,23 @@
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_NetworkingManager.h">
       <Filter>Header Files\A3_DEMO\a3_Networking</Filter>
     </ClInclude>
-    <ClInclude Include="EventManager.h">
-      <Filter>Header Files\A3_DEMO\a3_Networking\Events\EventStructures</Filter>
-    </ClInclude>
-    <ClInclude Include="EventList.h">
-      <Filter>Header Files\A3_DEMO\a3_Networking\Events\EventStructures</Filter>
-    </ClInclude>
-    <ClInclude Include="NetEvent.h">
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\Events\EventNodes\MoveEvent.h">
       <Filter>Header Files\A3_DEMO\a3_Networking\Events\EventNode</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkDataSource.h">
-      <Filter>Header Files\A3_DEMO\a3_Networking</Filter>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\Events\EventNodes\NetEvent.h">
+      <Filter>Header Files\A3_DEMO\a3_Networking\Events\EventNode</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\Events\EventStructures\EventList.h">
+      <Filter>Header Files\A3_DEMO\a3_Networking\Events\EventStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\Events\EventStructures\EventManager.h">
+      <Filter>Header Files\A3_DEMO\a3_Networking\Events\EventStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\Game\Game.h">
       <Filter>Header Files\A3_DEMO\Game</Filter>
     </ClInclude>
-    <ClInclude Include="MoveEvent.h">
-      <Filter>Header Files\A3_DEMO\a3_Networking\Events\EventNode</Filter>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\NetworkDataSource.h">
+      <Filter>Header Files\A3_DEMO\a3_Networking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
