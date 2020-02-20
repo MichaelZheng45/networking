@@ -30,7 +30,7 @@
 // animal3D framework includes
 
 #include "animal3D/animal3D.h"
-
+#include "A3_DEMO/a3_Networking/EventManager.h"
 
 //-----------------------------------------------------------------------------
 
@@ -52,6 +52,8 @@ extern "C"
 		a3ui16 port_inbound, port_outbound;
 		a3ui16 maxConnect_inbound, maxConnect_outbound;
 		void* peer;
+
+		//EventManager* eventMan;
 	};
 
 
