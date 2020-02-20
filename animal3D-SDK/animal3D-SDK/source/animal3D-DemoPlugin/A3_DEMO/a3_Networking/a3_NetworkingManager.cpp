@@ -27,10 +27,6 @@
 
 
 #include "NetworkDataSource.h"
-#include "Events/EventStructures/EventManager.h"
-
-#include "Events/EventNodes/NetEvent.h"
-#include "Events/EventNodes/MoveEvent.h"
 //-----------------------------------------------------------------------------
 // networking stuff
 
@@ -296,14 +292,14 @@ a3i32 a3netIdentity(a3_NetworkingManager* net, a3boolean isServer)
 	return 0;
 }
 
-a3i32 a3netProcessEvents(a3_NetworkingManager* net, a3_Game* game)
+a3i32 a3netProcessEvents(a3_NetworkingManager* net)
 {
 	int count = net->eventMan->getListLength();
 	for (int i = 0; i < count; i++)
 	{
 		char* message;
 		int size = 0;
-		net->eventMan->executeEvent(game,message, size);
+		net->eventMan->executeEvent(message, size);
 	}
 
 	return 0;

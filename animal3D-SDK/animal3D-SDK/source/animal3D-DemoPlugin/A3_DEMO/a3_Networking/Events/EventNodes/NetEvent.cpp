@@ -1,8 +1,9 @@
 #include "NetEvent.h"
 
-NetEvent::NetEvent(a3_NetGameMessages type, int addTime)
+NetEvent::NetEvent(a3_NetGameMessages type, a3i32 addTime)
 {
-
+	timeStamp = addTime;
+	messageType = type;
 }
 
 NetEvent::~NetEvent()
@@ -10,7 +11,7 @@ NetEvent::~NetEvent()
 
 }
 
-void NetEvent::executeOrder(a3_Game* game, char* message, int bufferSize)
+void NetEvent::executeOrder(char* message, int bufferSize)
 {
 
 }

@@ -44,7 +44,6 @@
 #include "_utilities/a3_DemoShaderProgram.h"
 
 #include "a3_NetworkingManager.h"
-#include "Game/Game.h"
 //-----------------------------------------------------------------------------
 
 #ifdef __cplusplus
@@ -156,7 +155,6 @@ extern "C"
 		// networking
 		a3_NetworkingManager net[1];
 
-		a3_Game game[1];
 		//---------------------------------------------------------------------
 		// object arrays: organized as anonymous unions for two reasons: 
 		//	1. easy to manage entire sets of the same type of object using the 

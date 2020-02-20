@@ -2,13 +2,12 @@
 #define MOVEEVENT_H
 
 #include "NetEvent.h"
-#include "A3_DEMO/Game/Game.h"
 
 class MoveEvent : public NetEvent
 {
 	public: 
 		MoveEvent(a3i32 objID, a3i32 newX, a3i32 newY, a3i32 addTime);
-		virtual void executeOrder(a3_Game* game, char* message, int bufferSize);
+		virtual void executeOrder( char* message, int bufferSize);
 
 	private:
 		a3i32 mObjID;

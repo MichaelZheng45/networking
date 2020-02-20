@@ -17,7 +17,7 @@ EventManager::~EventManager()
 	}
 }
 
-int EventManager::executeEvent(a3_Game* game, char* message, int bufferSize)
+int EventManager::executeEvent(char* message, int bufferSize)
 {
 	//find current
 	EventList* current = mHead;
@@ -32,7 +32,7 @@ int EventManager::executeEvent(a3_Game* game, char* message, int bufferSize)
 	mHead = mHead->getNext();
 
 	//get event
-	current->getEvent()->executeOrder(game,message, bufferSize);
+	current->getEvent()->executeOrder(message, bufferSize);
 
 	//remove event
 	delete current;

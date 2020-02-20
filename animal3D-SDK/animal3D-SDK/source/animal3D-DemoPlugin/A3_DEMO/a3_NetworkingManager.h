@@ -29,13 +29,8 @@
 // animal3D framework includes
 
 #include "animal3D/animal3D.h"
-#include "Game/Game.h"
 
-#include "RakNet/RakPeerInterface.h"
-#include "RakNet/MessageIdentifiers.h"
-#include "RakNet/RakNetTypes.h"
-#include "RakNet/BitStream.h"
-#include "RakNet/GetTime.h"
+#include "a3_Networking/Events/EventStructures/EventManager.h"
 //-----------------------------------------------------------------------------
 
 #ifdef __cplusplus
@@ -90,7 +85,7 @@ extern "C"
 
 	a3i32 a3netIdentity(a3_NetworkingManager* net, a3boolean isServer);
 
-	a3i32 a3netProcessEvents(a3_NetworkingManager* net, a3_Game* game);
+	a3i32 a3netProcessEvents(a3_NetworkingManager* net);
 
 	a3i32 a3netSendMoveEvent(a3_NetworkingManager* net, a3i32 objID, a3i32 x, a3i32 y);
 //-----------------------------------------------------------------------------
