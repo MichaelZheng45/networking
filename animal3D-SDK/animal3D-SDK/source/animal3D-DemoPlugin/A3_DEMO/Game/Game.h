@@ -8,12 +8,12 @@
 extern "C"
 {
 #else	//! __cplusplus
-	typedef class Game				Game;
+	typedef struct a3_Game				a3_Game;
 #endif // __ cplusplus
 
-	class Game
+	struct a3_Game
 	{
-
+		a3i32 gameID;
 	};
 
 #ifdef __cplusplus

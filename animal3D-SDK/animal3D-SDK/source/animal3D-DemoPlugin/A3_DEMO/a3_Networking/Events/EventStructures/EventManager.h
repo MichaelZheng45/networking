@@ -9,7 +9,7 @@ class EventManager
 		EventManager();	
 		~EventManager();
 
-		int executeEvent(Game* game, char* message, int bufferSize);
+		int executeEvent(a3_Game* game, char* message, int bufferSize);
 		bool addEvent(NetEvent* newEvent);
 		int getListLength();
 

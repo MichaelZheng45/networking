@@ -25,11 +25,6 @@
 
 #include "../a3_NetworkingManager.h"
 
-#include "RakNet/RakPeerInterface.h"
-#include "RakNet/MessageIdentifiers.h"
-#include "RakNet/RakNetTypes.h"
-#include "RakNet/BitStream.h"
-#include "RakNet/GetTime.h"
 
 #include "NetworkDataSource.h"
 #include "Events/EventStructures/EventManager.h"
@@ -45,7 +40,6 @@
 struct a3_NetGameMessageData
 {
 	unsigned char typeID;
-
 	// ****TO-DO: implement game message data struct
 
 };
@@ -80,6 +74,8 @@ a3i32 a3netStartup(a3_NetworkingManager* net, a3ui16 port_inbound, a3ui16 port_o
 				net->maxConnect_outbound = maxConnect_outbound;
 				net->peer = peer;
 
+				net->eventMan = new EventManager();
+
 				return 1;
 			}
 		}
@@ -92,6 +88,7 @@ a3i32 a3netShutdown(a3_NetworkingManager* net)
 {
 	if (net && net->peer)
 	{
+		delete net->eventMan;
 		RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
 		RakNet::RakPeerInterface::DestroyInstance(peer);
 		net->peer = 0;
@@ -138,6 +135,9 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 		RakNet::MessageID msg;
 		a3i32 count = 0;
 
+		/*
+
+		*/
 		for (packet = peer->Receive();
 			packet;
 			peer->DeallocatePacket(packet), packet = peer->Receive(), ++count)
@@ -179,11 +179,9 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 				case ID_CONNECTION_REQUEST_ACCEPTED:
 					printf("Our connection request has been accepted.\n");
 					{
-						// Use a BitStream to write a custom user message
-						// Bitstreams are easier to use than sending casted structures, 
-						//	and handle endian swapping automatically
+						/*
 						RakNet::BitStream bsOut[1];
-				
+
 						//indicate time stamped
 						bsOut->Write((RakNet::MessageID)ID_TIMESTAMP);
 						//get time
@@ -193,12 +191,53 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 						bsOut->Write((RakNet::MessageID)ID_GAME_MESSAGE_1);
 						bsOut->Write("Networking is fun");
 						peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
-						// ****TO-DO: write timestamped message
 
+						*/
+						
+						//recieved connection/ proceed to send message to server it is notified
+						if (!net->isServer)
+						{
+							net->serverAddress = packet->systemAddress;
+		
+							RakNet::BitStream bsOut[1];
+							bsOut->Write((RakNet::MessageID)ID_CLIENT_NOTIFIED);
+							peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, false);
+						}
+
+					}
+					break;
+				case ID_GAME_EVENT:
+					{
+						if (net->isServer)
+						{
+							printf("Recieved Event, resend to client");
+
+							peer->Send((char*)packet->data, sizeof(packet->data), HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, true);
+							
+						}
+						else
+						{
+							printf("Recieved Event, adding to eventmanager");
+							NetEvent* nEvent = (NetEvent*)packet->data;
+							net->eventMan->addEvent(nEvent);
+						}
+					}
+				case ID_CLIENT_NOTIFIED:
+					printf("Client is notified.\n");
+					{
+						if (net->user1Address == nullptr)
+						{
+							net->user1Address = packet->systemAddress;
+						}
+						else
+						{
+							net->user2Address = packet->systemAddress;
+						}
 					}
 					break;
 				case ID_NEW_INCOMING_CONNECTION:
 					printf("A connection is incoming.\n");
+
 					break;
 				case ID_NO_FREE_INCOMING_CONNECTIONS:
 					printf("The server is full.\n");
@@ -250,6 +289,36 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net)
 	}
 	return 0;
 }
+a3i32 a3netIdentity(a3_NetworkingManager* net, a3boolean isServer)
+{
+	net->isServer = isServer;
 
+	return 0;
+}
 
+a3i32 a3netProcessEvents(a3_NetworkingManager* net, a3_Game* game)
+{
+	int count = net->eventMan->getListLength();
+	for (int i = 0; i < count; i++)
+	{
+		char* message;
+		int size = 0;
+		net->eventMan->executeEvent(game,message, size);
+	}
+
+	return 0;
+}
+
+a3i32 a3netSendMoveEvent(a3_NetworkingManager* net, a3i32 objID, a3i32 x, a3i32 y)
+{
+	if (!net->isServer)
+	{
+		RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
+		RakNet::Time sendTime = RakNet::GetTime();
+		MoveEvent moveEvent = MoveEvent(objID, x, y, sendTime);
+
+		//send message
+		peer->Send(reinterpret_cast<char*>(&moveEvent), sizeof(moveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, true);
+	}
+}
 //-----------------------------------------------------------------------------

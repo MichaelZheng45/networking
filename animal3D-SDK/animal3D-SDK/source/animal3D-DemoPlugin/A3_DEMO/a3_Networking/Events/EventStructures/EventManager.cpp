@@ -17,7 +17,7 @@ EventManager::~EventManager()
 	}
 }
 
-int EventManager::executeEvent(Game* game, char* message, int bufferSize)
+int EventManager::executeEvent(a3_Game* game, char* message, int bufferSize)
 {
 	//find current
 	EventList* current = mHead;

@@ -10,7 +10,7 @@ NetEvent::~NetEvent()
 
 }
 
-void NetEvent::executeOrder(Game* game, char* message, int bufferSize)
+void NetEvent::executeOrder(a3_Game* game, char* message, int bufferSize)
 {
 
 }

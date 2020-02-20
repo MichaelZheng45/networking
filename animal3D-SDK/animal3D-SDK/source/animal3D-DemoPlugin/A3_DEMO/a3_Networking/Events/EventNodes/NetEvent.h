@@ -3,21 +3,25 @@
 
 #include "A3_DEMO/a3_Networking/NetworkDataSource.h"
 #include "A3_DEMO/Game/Game.h"
-
+#include "RakNet/RakPeerInterface.h"
+#include "RakNet/MessageIdentifiers.h"
+#include "RakNet/RakNetTypes.h"
+#include "RakNet/BitStream.h"
+#include "RakNet/GetTime.h"
 class NetEvent
 {
 	public:
-	NetEvent(a3_NetGameMessages type, int addTime);
+	NetEvent(a3_NetGameMessages type, a3i32 addTime);
 	~NetEvent();
 
-	virtual void executeOrder(Game* game, char* message, int bufferSize) = 0;
+	virtual void executeOrder(a3_Game* game, char* message, int bufferSize) = 0;
 	float getTime() {return timeStamp;}
-	void setTime(int time) {timeStamp = time;}
+	void setTime(a3i32 time) {timeStamp = time;}
 	
-	private:
+	protected:
 
 	a3_NetGameMessages messageType;
-	int timeStamp;
+	a3i32 timeStamp;
 };
 
 #endif // ! NETEVENT_H

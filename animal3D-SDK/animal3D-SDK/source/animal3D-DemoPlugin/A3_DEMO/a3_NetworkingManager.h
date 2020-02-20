@@ -29,7 +29,13 @@
 // animal3D framework includes
 
 #include "animal3D/animal3D.h"
+#include "Game/Game.h"
 
+#include "RakNet/RakPeerInterface.h"
+#include "RakNet/MessageIdentifiers.h"
+#include "RakNet/RakNetTypes.h"
+#include "RakNet/BitStream.h"
+#include "RakNet/GetTime.h"
 //-----------------------------------------------------------------------------
 
 #ifdef __cplusplus
@@ -50,6 +56,14 @@ extern "C"
 		a3ui16 port_inbound, port_outbound;
 		a3ui16 maxConnect_inbound, maxConnect_outbound;
 		void* peer;
+
+		RakNet::SystemAddress serverAddress;
+		RakNet::SystemAddress user1Address;
+		RakNet::SystemAddress user2Address;
+
+		bool isServer;
+
+		EventManager* eventMan;
 	};
 
 
@@ -74,7 +88,11 @@ extern "C"
 	// process outbound packets
 	a3i32 a3netProcessOutbound(a3_NetworkingManager* net);
 
+	a3i32 a3netIdentity(a3_NetworkingManager* net, a3boolean isServer);
 
+	a3i32 a3netProcessEvents(a3_NetworkingManager* net, a3_Game* game);
+
+	a3i32 a3netSendMoveEvent(a3_NetworkingManager* net, a3i32 objID, a3i32 x, a3i32 y);
 //-----------------------------------------------------------------------------
 
 

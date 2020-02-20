@@ -51,13 +51,21 @@ void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 	if (isServer)
 	{
 		if (a3netStartup(demoState->net, port_server, 0, maxConnections_server, 0) > 0)
+		{
 			printf("\n STARTED NETWORKING AS SERVER \n");
+			a3netIdentity(demoState->net, true);
+		}		
 	}
 	else
 	{
 		if (a3netStartup(demoState->net, 0, port_server, 0, maxConnections_client) > 0)
+		{
 			if (a3netConnect(demoState->net, ipAddress) > 0)
+			{
 				printf("\n STARTED NETWORKING AS CLIENT \n");
+				a3netIdentity(demoState->net, true);
+			}
+		}
 	}
 }
 
@@ -322,6 +330,9 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 			a3netProcessInbound(demoState->net);
 			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessOutbound(demoState->net);
+
+		//	a3netProcessEvents(demoState->net, demoState->game);
+
 			a3demo_render(demoState);
 
 			// update input
