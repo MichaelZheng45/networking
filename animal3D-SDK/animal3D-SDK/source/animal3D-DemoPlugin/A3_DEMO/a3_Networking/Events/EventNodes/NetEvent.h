@@ -4,6 +4,7 @@
 
 #include "animal3D/animal3D.h"
 
+#include "RakNet/BitStream.h"
 #include "A3_DEMO/a3_Networking/NetworkDataSource.h"
 
 class NetEvent

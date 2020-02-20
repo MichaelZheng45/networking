@@ -25,22 +25,11 @@
 
 #include "../a3_NetworkingManager.h"
 
-
-#include "NetworkDataSource.h"
+#include "A3_DEMO/a3_Networking/Events/EventNodes/MoveEvent.h"
+#include "RakNet/GetTime.h"
+#include "RakNet/RakPeerInterface.h"
 //-----------------------------------------------------------------------------
 // networking stuff
-
-
-#pragma pack(push, 1)
-
-struct a3_NetGameMessageData
-{
-	unsigned char typeID;
-	// ****TO-DO: implement game message data struct
-
-};
-
-#pragma pack (pop)
 
 
 // startup networking
@@ -193,11 +182,9 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 						//recieved connection/ proceed to send message to server it is notified
 						if (!net->isServer)
 						{
-							net->serverAddress = packet->systemAddress;
-		
 							RakNet::BitStream bsOut[1];
 							bsOut->Write((RakNet::MessageID)ID_CLIENT_NOTIFIED);
-							peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, false);
+							peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 						}
 
 					}
@@ -221,14 +208,6 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 				case ID_CLIENT_NOTIFIED:
 					printf("Client is notified.\n");
 					{
-						if (net->user1Address == nullptr)
-						{
-							net->user1Address = packet->systemAddress;
-						}
-						else
-						{
-							net->user2Address = packet->systemAddress;
-						}
 					}
 					break;
 				case ID_NEW_INCOMING_CONNECTION:
@@ -314,7 +293,8 @@ a3i32 a3netSendMoveEvent(a3_NetworkingManager* net, a3i32 objID, a3i32 x, a3i32 
 		MoveEvent moveEvent = MoveEvent(objID, x, y, sendTime);
 
 		//send message
-		peer->Send(reinterpret_cast<char*>(&moveEvent), sizeof(moveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, true);
+		peer->Send(reinterpret_cast<char*>(&moveEvent), sizeof(moveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(0), false);
+		//peer->Send(reinterpret_cast<char*>(&moveEvent), sizeof(moveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 	}
 }
 //-----------------------------------------------------------------------------

@@ -3,6 +3,7 @@
 EventList::EventList(NetEvent* newEvent)
 {
 	mEvent = newEvent;
+	next = NULL;
 }
 
 EventList::~EventList()

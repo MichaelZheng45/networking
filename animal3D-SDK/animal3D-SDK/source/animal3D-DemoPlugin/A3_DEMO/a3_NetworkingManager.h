@@ -52,11 +52,7 @@ extern "C"
 		a3ui16 maxConnect_inbound, maxConnect_outbound;
 		void* peer;
 
-		RakNet::SystemAddress serverAddress;
-		RakNet::SystemAddress user1Address;
-		RakNet::SystemAddress user2Address;
-
-		bool isServer;
+		a3boolean isServer;
 
 		EventManager* eventMan;
 	};

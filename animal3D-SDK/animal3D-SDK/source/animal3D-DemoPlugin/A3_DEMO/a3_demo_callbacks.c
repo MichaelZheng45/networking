@@ -48,12 +48,14 @@ void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 	a3ui16 const maxConnections_server = 16;
 	a3ui16 const maxConnections_client = 1;
 
+	a3netIdentity(demoState->net, isServer);
+
 	if (isServer)
 	{
 		if (a3netStartup(demoState->net, port_server, 0, maxConnections_server, 0) > 0)
 		{
 			printf("\n STARTED NETWORKING AS SERVER \n");
-			a3netIdentity(demoState->net, true);
+
 		}		
 	}
 	else
@@ -63,7 +65,7 @@ void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 			if (a3netConnect(demoState->net, ipAddress) > 0)
 			{
 				printf("\n STARTED NETWORKING AS CLIENT \n");
-				a3netIdentity(demoState->net, true);
+
 			}
 		}
 	}
