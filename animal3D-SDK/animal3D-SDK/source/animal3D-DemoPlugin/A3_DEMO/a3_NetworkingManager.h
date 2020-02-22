@@ -54,7 +54,7 @@ extern "C"
 
 		a3boolean isServer;
 
-		EventManager* eventMan;
+		EventManager eventMan[1];
 	};
 
 

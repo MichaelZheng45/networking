@@ -202,7 +202,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 						{
 							printf("Recieved Event, adding to eventmanager");
 							NetEvent* nEvent = (NetEvent*)packet->data;
-							net->eventMan->addEvent(nEvent);
+							addEvent(net->eventMan,nEvent);
 						}
 					}
 				case ID_CLIENT_NOTIFIED:
@@ -273,12 +273,12 @@ a3i32 a3netIdentity(a3_NetworkingManager* net, a3boolean isServer)
 
 a3i32 a3netProcessEvents(a3_NetworkingManager* net)
 {
-	int count = net->eventMan->getListLength();
+	int count = net->eventMan->nodeCount;
 	for (int i = 0; i < count; i++)
 	{
 		char* message;
 		int size = 0;
-		net->eventMan->executeEvent(message, size);
+		executeEvent(net->eventMan, message, size);
 	}
 
 	return 0;
