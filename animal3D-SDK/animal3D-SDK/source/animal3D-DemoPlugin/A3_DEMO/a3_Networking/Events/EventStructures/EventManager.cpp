@@ -12,10 +12,10 @@ a3i32 executeEvent(EventManager* eventMan, char* message, int bufferSize)
 	}
 
 	//reset head to the next one
-	eventMan->mHead = eventMan->mHead->getNext();
+	eventMan->mHead = eventMan->mHead->next;
 
 	//get event
-	current->getEvent()->executeOrder(message, bufferSize);
+	current->mEvent->executeOrder(message, bufferSize);
 	eventMan->nodeCount--;
 	//remove event
 	//delete current;
@@ -35,19 +35,23 @@ a3boolean addEvent(EventManager* eventMan, NetEvent* newEvent)
 	if (eventMan->mHead == nullptr)
 	{
 		inserted = true;
-		eventMan->mHead =  &EventList(newEvent);
+		EventList newEventList;
+		newEventList.mEvent = newEvent;
+		eventMan->mHead = &newEventList;
 	
 		eventMan->nodeCount++;
 		return true;
 	}
 
 	//if the head is higher than the new event, create new head
-	if (eventMan->mHead->getEvent()->getTime() >= newEvent->getTime())
+	if (eventMan->mHead->mEvent->getTime() >= newEvent->getTime())
 	{
 		inserted = true;
-		EventList* newHead = &EventList(newEvent);
+		EventList newEventList;
+		newEventList.mEvent = newEvent;
+		EventList* newHead = &newEventList;
 
-		newHead->setNext(eventMan->mHead);
+		newHead->next = eventMan->mHead;
 		eventMan->mHead = newHead;
 
 		eventMan->nodeCount++;
@@ -58,21 +62,25 @@ a3boolean addEvent(EventManager* eventMan, NetEvent* newEvent)
 	while (!inserted)
 	{
 		//if at the end of the list
-		if (current->getNext() == nullptr)
+		if (current->next == nullptr)
 		{
 			//curent is last in line
 			inserted = true;
-			current->setNext(&EventList(newEvent));
+			EventList newEventList;
+			newEventList.mEvent = newEvent;
+			current->next = &newEventList;
 		}
 		//if the next node has a greater time stamp than current event
-		else if (current->getNext()->getEvent()->getTime() >= newEvent->getTime())
+		else if (current->next->mEvent->getTime() >= newEvent->getTime())
 		{
 			//inserted and relink the nodes
 			inserted = true;
 
-			EventList* newNode = &EventList(newEvent);
-			newNode->setNext(current->getNext());
-			current->setNext(newNode);
+			EventList newEventList;
+			newEventList.mEvent = newEvent;
+			EventList* newNode = &newEventList;
+			newNode->next = current->next;
+			current->next = newNode;
 
 			eventMan->nodeCount++;
 			return true;
@@ -80,7 +88,7 @@ a3boolean addEvent(EventManager* eventMan, NetEvent* newEvent)
 		else
 		{
 			//iterate next
-			current = current->getNext();
+			current = current->next;
 		}
 	}
 

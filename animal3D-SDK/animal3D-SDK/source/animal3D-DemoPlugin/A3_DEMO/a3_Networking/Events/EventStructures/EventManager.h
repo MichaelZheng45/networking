@@ -15,7 +15,7 @@ typedef struct EventManager			EventManager;
 struct EventManager
 {
 	EventList* mHead;
-	int nodeCount;
+	a3i32 nodeCount;
 };
 
 a3i32 executeEvent(EventManager* eventMan, char* message, int bufferSize);

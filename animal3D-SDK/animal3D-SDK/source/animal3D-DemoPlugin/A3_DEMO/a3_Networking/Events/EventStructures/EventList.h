@@ -2,20 +2,24 @@
 #define EVENTLIST_H
 
 #include "A3_DEMO/a3_Networking/Events/EventNodes/NetEvent.h"
-
-class EventList
+#include "A3_DEMO/a3_Networking/Events/EventNodes/MoveEvent.h"
+#ifdef __cplusplus
+extern "C"
 {
-	public: 
-		EventList(NetEvent* newEvent);
-		~EventList();
+#else	// !__cplusplus
+typedef struct EventList			EventList;
+#endif	// __cplusplus
 
-		NetEvent* getEvent();
-		EventList* getNext();
-		void setNext(EventList* newNext);
+struct EventList
+{
+	EventList* next;
 
-	private:
-		EventList* next;
-
-		NetEvent* mEvent;
+	NetEvent* mEvent;
 };
+#ifdef __cplusplus
+}
+#endif	// __cplusplus
+
+
+
 #endif // !EVENTLIST_H

@@ -25,7 +25,6 @@
 
 #include "../a3_NetworkingManager.h"
 
-#include "A3_DEMO/a3_Networking/Events/EventNodes/MoveEvent.h"
 #include "RakNet/GetTime.h"
 #include "RakNet/RakPeerInterface.h"
 //-----------------------------------------------------------------------------
@@ -58,8 +57,6 @@ a3i32 a3netStartup(a3_NetworkingManager* net, a3ui16 port_inbound, a3ui16 port_o
 				net->maxConnect_inbound = maxConnect_inbound;
 				net->maxConnect_outbound = maxConnect_outbound;
 				net->peer = peer;
-
-				net->eventMan = new EventManager();
 
 				return 1;
 			}
