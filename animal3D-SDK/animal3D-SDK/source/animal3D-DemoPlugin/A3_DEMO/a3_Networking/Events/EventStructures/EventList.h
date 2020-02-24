@@ -1,8 +1,7 @@
 #ifndef EVENTLIST_H
 #define EVENTLIST_H
 
-#include "A3_DEMO/a3_Networking/Events/EventNodes/NetEvent.h"
-#include "A3_DEMO/a3_Networking/Events/EventNodes/MoveEvent.h"
+#include "A3_DEMO/a3_Networking/Events/EventNodes/EventWrapper.h"
 #ifdef __cplusplus
 extern "C"
 {

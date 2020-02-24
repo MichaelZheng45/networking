@@ -7,26 +7,7 @@
 #include "RakNet/BitStream.h"
 #include "A3_DEMO/a3_Networking/NetworkDataSource.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#else	// !__cplusplus
-typedef struct NetEvent			NetEvent;
-#endif	// __cplusplus
-
-
-struct NetEvent
-{
-	a3boolean it;
-};
-
-
-#ifdef __cplusplus
-}
-#endif	// __cplusplus
-
-
-struct NetEvent
+class NetEvent
 {
 	public:
 	NetEvent(a3_NetGameMessages type, a3i32 addTime);
