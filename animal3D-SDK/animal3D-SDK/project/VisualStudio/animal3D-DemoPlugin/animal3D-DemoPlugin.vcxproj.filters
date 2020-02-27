@@ -156,6 +156,9 @@
     <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\Events\EventNodes\EventWrapper.cpp">
       <Filter>Source Files\common\A3_DEMO\a3_Networking\Events\EventNode</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\Game\GameWrapper.cpp">
+      <Filter>Source Files\common\A3_DEMO\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\a3_dylib_config_export.h">
@@ -199,6 +202,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\Events\EventNodes\EventWrapper.h">
       <Filter>Header Files\A3_DEMO\a3_Networking\Events\EventNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\Game\GameWrapper.h">
+      <Filter>Header Files\A3_DEMO\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
