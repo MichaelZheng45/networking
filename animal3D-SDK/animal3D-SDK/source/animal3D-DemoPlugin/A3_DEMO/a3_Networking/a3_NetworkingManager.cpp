@@ -24,7 +24,7 @@
 
 
 #include "../a3_NetworkingManager.h"
-
+#include "NetworkDataSource.h"
 #include "RakNet/GetTime.h"
 #include "RakNet/RakPeerInterface.h"
 //-----------------------------------------------------------------------------
@@ -287,11 +287,12 @@ a3i32 a3netSendMoveEvent(a3_NetworkingManager* net, a3i32 objID, a3i32 x, a3i32 
 	{
 		RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
 		RakNet::Time sendTime = RakNet::GetTime();
-		MoveEvent moveEvent = MoveEvent(objID, x, y, sendTime);
+		NetEvent* moveEvent = newMoveEvent(objID, x, y, sendTime);
 
 		//send message
-		peer->Send(reinterpret_cast<char*>(&moveEvent), sizeof(moveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(0), false);
+		peer->Send(reinterpret_cast<char*>(&*moveEvent), sizeof(moveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(0), false);
 		//peer->Send(reinterpret_cast<char*>(&moveEvent), sizeof(moveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+		delete moveEvent;
 	}
 }
 //-----------------------------------------------------------------------------

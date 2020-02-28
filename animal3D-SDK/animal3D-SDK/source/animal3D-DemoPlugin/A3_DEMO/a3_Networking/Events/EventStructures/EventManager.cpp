@@ -1,4 +1,5 @@
 #include "EventManager.h"
+#include "A3_DEMO/a3_Networking/Events/EventNodes/EventWrapper.h"
 
 a3i32 executeEvent(EventManager* eventMan, char* message, int bufferSize)
 {
@@ -15,8 +16,11 @@ a3i32 executeEvent(EventManager* eventMan, char* message, int bufferSize)
 	eventMan->mHead = eventMan->mHead->next;
 
 	//get event
-	current->mEvent->executeOrder(message, bufferSize);
+	NetEvent_executeEvent(current->mEvent);
 	eventMan->nodeCount--;
+
+	delete current->mEvent;
+	delete current;
 	//remove event
 	//delete current;
 	return 0;
@@ -44,7 +48,7 @@ a3boolean addEvent(EventManager* eventMan, NetEvent* newEvent)
 	}
 
 	//if the head is higher than the new event, create new head
-	if (eventMan->mHead->mEvent->getTime() >= newEvent->getTime())
+	if (NetEvent_getTime(current->mEvent) >= NetEvent_getTime(newEvent))
 	{
 		inserted = true;
 		EventList newEventList;
@@ -71,7 +75,7 @@ a3boolean addEvent(EventManager* eventMan, NetEvent* newEvent)
 			current->next = &newEventList;
 		}
 		//if the next node has a greater time stamp than current event
-		else if (current->next->mEvent->getTime() >= newEvent->getTime())
+		else if (NetEvent_getTime(current->next->mEvent) >= NetEvent_getTime(newEvent))
 		{
 			//inserted and relink the nodes
 			inserted = true;

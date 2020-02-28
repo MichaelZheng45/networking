@@ -5,42 +5,30 @@
 #include "animal3D/animal3D.h"
 #include "Unit.h"
 
-#ifdef __cplusplus
-extern "C"
+enum gameType
+{	
+	PUSH_MODE,
+	SHARING_MODE,
+	COUPLED_MODE
+};
+
+class a3_Game
 {
-#else	//! __cplusplus
-	typedef struct a3_Game				a3_Game;
-#endif // __ cplusplus
+	private:
+	a3i32 gameID;
+	a3_Unit ownedUnits[20];
+	a3_Unit unownedUnit[20];
 
-	enum gameType
-	{	
-		PUSH_MODE,
-		SHARING_MODE,
-		COUPLED_MODE
-	};
+	public: 
+		void run(a3_Game* game);
 
-	struct a3_Game
-	{
-		a3i32 gameID;
+		void initNetModeOne();
+		void initNetModeTwo();
+		void initNetModeThree();
 
-		
-
-		a3_Unit ownedUnits[20];
-		a3_Unit unownedUnit[20];
-	};
-
-	void run(a3_Game* game);
-
-	void initNetModeOne(a3_Game* game);
-	void initNetModeTwo(a3_Game* game);
-	void initNetModeThree(a3_Game* game);
-
-	void runNetModeOne(a3_Game* game);
-	void runNetModeTwo(a3_Game* game);
-	void runNetModeThree(a3_Game* game);
-
-#ifdef __cplusplus
-}
-#endif	// __cplusplus
+		void runNetModeOne();
+		void runNetModeTwo();
+		void runNetModeThree();
+};
 
 #endif // !GAME_H

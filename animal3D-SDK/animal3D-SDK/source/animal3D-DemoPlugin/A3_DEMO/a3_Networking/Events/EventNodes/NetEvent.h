@@ -4,7 +4,7 @@
 
 #include "animal3D/animal3D.h"
 
-#include "RakNet/BitStream.h"
+
 #include "A3_DEMO/a3_Networking/NetworkDataSource.h"
 
 class NetEvent
@@ -13,7 +13,7 @@ class NetEvent
 	NetEvent(a3_NetGameMessages type, a3i32 addTime);
 	~NetEvent();
 
-	virtual void executeOrder( char* message, int bufferSize) = 0;
+	virtual void executeOrder() = 0;
 	float getTime() {return timeStamp;}
 	void setTime(a3i32 time) {timeStamp = time;}
 

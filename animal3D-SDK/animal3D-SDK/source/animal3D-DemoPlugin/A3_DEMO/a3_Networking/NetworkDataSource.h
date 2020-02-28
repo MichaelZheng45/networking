@@ -1,7 +1,7 @@
 #pragma once
 
 #include "RakNet/MessageIdentifiers.h"
-
+#include "RakNet/BitStream.h"
 
 enum a3_NetGameMessages
 {

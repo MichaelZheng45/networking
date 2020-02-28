@@ -7,7 +7,7 @@ class MoveEvent : public NetEvent
 {
 	public: 
 		MoveEvent(a3i32 objID, a3i32 newX, a3i32 newY, a3i32 addTime);
-		virtual void executeOrder( char* message, int bufferSize);
+		virtual void executeOrder();
 
 	private:
 		a3i32 mObjID;

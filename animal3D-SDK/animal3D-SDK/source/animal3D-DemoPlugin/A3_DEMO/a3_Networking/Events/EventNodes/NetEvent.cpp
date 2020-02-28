@@ -11,7 +11,7 @@ NetEvent::~NetEvent()
 
 }
 
-void NetEvent::executeOrder(char* message, int bufferSize)
+void NetEvent::executeOrder()
 {
 
 }
