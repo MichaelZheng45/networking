@@ -4,7 +4,9 @@ extern "C"
 {
 	a3_NetworkingManager* newNetworkManager()
 	{
-		return new a3_NetworkingManager();
+		a3_NetworkingManager* instance = a3_NetworkingManager::getInstance();
+		instance = new a3_NetworkingManager();
+		return instance;
 	}
 
 	// startup networking
@@ -68,9 +70,15 @@ extern "C"
 		return 0;
 	}
 
-	a3i32 a3netWSetType(a3_NetworkingManager* net, int type)
+	a3i32 a3netWSetType(a3_NetworkingManager* net, a3i32 type)
 	{
 		net->a3netSetType(static_cast<netType>(type));
+		return 0;
+	}
+
+	a3i32 a3netSendInitGame(a3_NetworkingManager* net, a3i32 id, a3i32 xSize, a3i32 ySize)
+	{
+		net->a3netInitGameEvent(id, xSize, ySize);
 		return 0;
 	}
 }

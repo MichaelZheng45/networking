@@ -26,9 +26,11 @@
 #include "../a3_NetworkingManager.h"
 #include "A3_DEMO/a3_Networking/Events/EventNodes/NetEvent.h"
 #include "A3_DEMO/a3_Networking/Events/EventNodes/MoveEvent.h"
+#include "A3_DEMO/a3_Networking/Events/EventNodes/InitGameEvent.h"
 
 //-----------------------------------------------------------------------------
 // networking stuff
+a3_NetworkingManager* a3_NetworkingManager::instance = 0;
 
 a3_NetworkingManager::a3_NetworkingManager()
 {
@@ -289,17 +291,27 @@ a3i32 a3_NetworkingManager::a3netProcessEvents()
 
 a3i32 a3_NetworkingManager::a3netSendMoveEvent(a3i32 objID, a3i32 x, a3i32 y)
 {
-	if (!isServer)
-	{
-		RakNet::RakPeerInterface* peer = mPeer;
-		RakNet::Time sendTime = RakNet::GetTime();
-		NetEvent* moveEvent = new MoveEvent(objID, x, y, (a3i32)sendTime);
+	RakNet::RakPeerInterface* peer = mPeer;
+	RakNet::Time sendTime = RakNet::GetTime();
+	NetEvent* moveEvent = new MoveEvent(objID, x, y, (a3i32)sendTime);
 
-		//send message
-		peer->Send(reinterpret_cast<char*>(&*moveEvent), sizeof(moveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(0), false);
-		//peer->Send(reinterpret_cast<char*>(&moveEvent), sizeof(moveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
-		delete moveEvent;
-	}
+	//send message
+	//peer->Send(reinterpret_cast<char*>(&*moveEvent), sizeof(moveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(0), false);
+	peer->Send(reinterpret_cast<char*>(&moveEvent), sizeof(moveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+	delete moveEvent;
+	return 0;
+}
+
+a3i32 a3_NetworkingManager::a3netInitGameEvent(a3i32 id, a3i32 xSize, a3i32 ySize)
+{
+	RakNet::RakPeerInterface* peer = mPeer;
+	RakNet::Time sendTime = RakNet::GetTime();
+	NetEvent* initEvent = new InitGameEvent(id, (a3i32)sendTime, xSize, ySize);
+
+	//send message
+	//peer->Send(reinterpret_cast<char*>(&*moveEvent), sizeof(moveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(0), false);
+	peer->Send(reinterpret_cast<char*>(&initEvent), sizeof(initEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+	delete initEvent;
 	return 0;
 }
 

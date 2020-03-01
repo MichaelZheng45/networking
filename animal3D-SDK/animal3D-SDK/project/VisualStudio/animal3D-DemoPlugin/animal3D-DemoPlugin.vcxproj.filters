@@ -159,6 +159,12 @@
     <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\NetworkManagerWrapper.cpp">
       <Filter>Source Files\common\A3_DEMO\a3_Networking</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\Events\EventNodes\MakeUnitEvent.cpp">
+      <Filter>Source Files\common\A3_DEMO\a3_Networking\Events\EventNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\Events\EventNodes\InitGameEvent.cpp">
+      <Filter>Source Files\common\A3_DEMO\a3_Networking\Events\EventNode</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\a3_dylib_config_export.h">
@@ -205,6 +211,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\NetworkManagerWrapper.h">
       <Filter>Header Files\A3_DEMO\a3_Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\Events\EventNodes\MakeUnitEvent.h">
+      <Filter>Header Files\A3_DEMO\a3_Networking\Events\EventNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\Events\EventNodes\InitGameEvent.h">
+      <Filter>Header Files\A3_DEMO\a3_Networking\Events\EventNode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

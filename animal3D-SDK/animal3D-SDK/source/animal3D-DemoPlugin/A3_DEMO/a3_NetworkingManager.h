@@ -48,6 +48,8 @@
 	class a3_NetworkingManager
 	{
 		public:
+		static a3_NetworkingManager* getInstance() {return instance;}
+
 		a3_NetworkingManager();
 		~a3_NetworkingManager();
 
@@ -77,7 +79,11 @@
 
 		a3i32 a3netSendMoveEvent( a3i32 objID, a3i32 x, a3i32 y);
 
+		a3i32 a3netInitGameEvent(a3i32 id, a3i32 xSize, a3i32 ySize);
+
 		private:
+		static a3_NetworkingManager* instance;
+	
 		a3ui16 port_inbound, port_outbound;
 		a3ui16 maxConnect_inbound, maxConnect_outbound;
 		RakNet::RakPeerInterface* mPeer;

@@ -9,7 +9,7 @@ extern "C" {
 #endif
 
 void updateGame();
-void initGame(int type, a3boolean isServer); 
+void initGame(a3i32 type, a3boolean isServer, a3i32 xSize, a3i32 ySize); 
 
 //get ownedunit to draw
 //get unowned unit to draw
