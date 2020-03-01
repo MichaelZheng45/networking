@@ -9,6 +9,8 @@ extern "C" {
 	typedef a3byte a3netAddressStr[16];
 	typedef struct a3_NetworkingManager a3_NetworkingManager;
 
+	a3_NetworkingManager* newNetworkManager();
+
 	// startup networking
 	a3i32 a3netWStartup(a3_NetworkingManager* net, a3ui16 port_inbound, a3ui16 port_outbound, a3ui16 maxConnect_inbound, a3ui16 maxConnect_outbound);
 

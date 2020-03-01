@@ -203,7 +203,7 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hot
 {
 	const a3ui32 stateSize = a3demo_getPersistentStateSize();
 	const a3ui32 trigSamplesPerDegree = 4;
-	
+
 	// do any re-allocation tasks
 	if (demoState && hotbuild)
 	{
@@ -266,6 +266,8 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hot
 		a3demo_initScene(demoState);
 	}
 
+	//initialize network manager
+	demoState->net = newNetworkManager();
 	// return persistent state pointer
 	return demoState;
 }

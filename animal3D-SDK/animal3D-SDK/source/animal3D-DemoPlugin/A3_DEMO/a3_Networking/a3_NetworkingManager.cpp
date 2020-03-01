@@ -33,6 +33,7 @@
 a3_NetworkingManager::a3_NetworkingManager()
 {
 	eventMan = nullptr;
+	mPeer = nullptr;
 }
 
 a3_NetworkingManager::~a3_NetworkingManager()
@@ -42,10 +43,10 @@ a3_NetworkingManager::~a3_NetworkingManager()
 // startup networking
 a3i32 a3_NetworkingManager::a3netStartup( a3ui16 port_inbound, a3ui16 port_outbound, a3ui16 maxConnect_inbound, a3ui16 maxConnect_outbound)
 {
-	if (!mPeer)
+	if (mPeer == nullptr)
 	{
 		RakNet::RakPeerInterface* peer = RakNet::RakPeerInterface::GetInstance();
-		if (peer)
+		if (peer != nullptr)
 		{
 			RakNet::SocketDescriptor socket[2] = {
 				RakNet::SocketDescriptor(port_inbound, 0),		// server settings
@@ -77,7 +78,7 @@ a3i32 a3_NetworkingManager::a3netStartup( a3ui16 port_inbound, a3ui16 port_outbo
 // shutdown networking
 a3i32 a3_NetworkingManager::a3netShutdown()
 {
-	if (mPeer)
+	if (mPeer != nullptr)
 	{
 		delete eventMan;
 		RakNet::RakPeerInterface* peer = mPeer;
@@ -93,7 +94,7 @@ a3i32 a3_NetworkingManager::a3netShutdown()
 // connect
 a3i32 a3_NetworkingManager::a3netConnect( a3netAddressStr const ip)
 {
-	if (mPeer)
+	if (mPeer != nullptr)
 	{
 		RakNet::RakPeerInterface* peer = mPeer;
 		peer->Connect(ip,port_outbound, 0, 0);
@@ -105,7 +106,7 @@ a3i32 a3_NetworkingManager::a3netConnect( a3netAddressStr const ip)
 // disconnect
 a3i32 a3_NetworkingManager::a3netDisconnect()
 {
-	if (mPeer)
+	if (mPeer != nullptr)
 	{
 		RakNet::RakPeerInterface* peer = mPeer;
 		a3ui16 i, j = peer->NumberOfConnections();
@@ -127,9 +128,6 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 		RakNet::MessageID msg;
 		a3i32 count = 0;
 
-		/*
-
-		*/
 		for (packet = peer->Receive();
 			packet;
 			peer->DeallocatePacket(packet), packet = peer->Receive(), ++count)
