@@ -47,12 +47,11 @@ void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 	a3ui16 const port_client = 60005;
 	a3ui16 const maxConnections_server = 16;
 	a3ui16 const maxConnections_client = 1;
-
-	a3netIdentity(demoState->net, isServer);
-
+	a3netWIdentity(demoState->net, isServer);
+	demoState->isServer = isServer;
 	if (isServer)
 	{
-		if (a3netStartup(demoState->net, port_server, 0, maxConnections_server, 0) > 0)
+		if (a3netWStartup(demoState->net, port_server, 0, maxConnections_server, 0) > 0)
 		{
 			printf("\n STARTED NETWORKING AS SERVER \n");
 
@@ -60,9 +59,9 @@ void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 	}
 	else
 	{
-		if (a3netStartup(demoState->net, 0, port_server, 0, maxConnections_client) > 0)
+		if (a3netWStartup(demoState->net, 0, port_server, 0, maxConnections_client) > 0)
 		{
-			if (a3netConnect(demoState->net, ipAddress) > 0)
+			if (a3netWConnect(demoState->net, ipAddress) > 0)
 			{
 				printf("\n STARTED NETWORKING AS CLIENT \n");
 
@@ -73,8 +72,8 @@ void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 
 void a3demo_stopNetworking(a3_DemoState* demoState)
 {
-	if (a3netDisconnect(demoState->net) > 0)
-		if (a3netShutdown(demoState->net) > 0)
+	if (a3netWDisconnect(demoState->net) > 0)
+		if (a3netWShutdown(demoState->net) > 0)
 			printf("\n SHUT DOWN NETWORKING \n");
 }
 
@@ -329,9 +328,9 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 		{
 			// render timer ticked, update demo state and draw
 			a3demo_input(demoState, demoState->renderTimer->secondsPerTick);
-			a3netProcessInbound(demoState->net);
+			a3netWProcessInbound(demoState->net);
 			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
-			a3netProcessOutbound(demoState->net);
+			a3netWProcessOutbound(demoState->net);
 
 		//	a3netProcessEvents(demoState->net, demoState->game);
 

@@ -24,17 +24,25 @@
 
 
 #include "../a3_NetworkingManager.h"
-#include "NetworkDataSource.h"
-#include "RakNet/GetTime.h"
-#include "RakNet/RakPeerInterface.h"
+#include "A3_DEMO/a3_Networking/Events/EventNodes/NetEvent.h"
+#include "A3_DEMO/a3_Networking/Events/EventNodes/MoveEvent.h"
+
 //-----------------------------------------------------------------------------
 // networking stuff
 
+a3_NetworkingManager::a3_NetworkingManager()
+{
+	eventMan = nullptr;
+}
+
+a3_NetworkingManager::~a3_NetworkingManager()
+{
+}
 
 // startup networking
-a3i32 a3netStartup(a3_NetworkingManager* net, a3ui16 port_inbound, a3ui16 port_outbound, a3ui16 maxConnect_inbound, a3ui16 maxConnect_outbound)
+a3i32 a3_NetworkingManager::a3netStartup( a3ui16 port_inbound, a3ui16 port_outbound, a3ui16 maxConnect_inbound, a3ui16 maxConnect_outbound)
 {
-	if (net && !net->peer)
+	if (!mPeer)
 	{
 		RakNet::RakPeerInterface* peer = RakNet::RakPeerInterface::GetInstance();
 		if (peer)
@@ -52,12 +60,13 @@ a3i32 a3netStartup(a3_NetworkingManager* net, a3ui16 port_inbound, a3ui16 port_o
 				peer->SetMaximumIncomingConnections(maxConnect_inbound);
 				peer->SetOccasionalPing(true);
 
-				net->port_inbound = port_inbound;
-				net->port_outbound = port_outbound;
-				net->maxConnect_inbound = maxConnect_inbound;
-				net->maxConnect_outbound = maxConnect_outbound;
-				net->peer = peer;
+				port_inbound = port_inbound;
+				port_outbound = port_outbound;
+				maxConnect_inbound = maxConnect_inbound;
+				maxConnect_outbound = maxConnect_outbound;
+				peer = peer;
 
+				eventMan = new EventManager();
 				return 1;
 			}
 		}
@@ -66,14 +75,15 @@ a3i32 a3netStartup(a3_NetworkingManager* net, a3ui16 port_inbound, a3ui16 port_o
 }
 
 // shutdown networking
-a3i32 a3netShutdown(a3_NetworkingManager* net)
+a3i32 a3_NetworkingManager::a3netShutdown()
 {
-	if (net && net->peer)
+	if (mPeer)
 	{
-		delete net->eventMan;
-		RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
+		delete eventMan;
+		RakNet::RakPeerInterface* peer = mPeer;
 		RakNet::RakPeerInterface::DestroyInstance(peer);
-		net->peer = 0;
+		peer = 0;
+		delete this;
 		return 1;
 	}
 	return 0;
@@ -81,23 +91,23 @@ a3i32 a3netShutdown(a3_NetworkingManager* net)
 
 
 // connect
-a3i32 a3netConnect(a3_NetworkingManager* net, a3netAddressStr const ip)
+a3i32 a3_NetworkingManager::a3netConnect( a3netAddressStr const ip)
 {
-	if (net && net->peer)
+	if (mPeer)
 	{
-		RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
-		peer->Connect(ip, net->port_outbound, 0, 0);
+		RakNet::RakPeerInterface* peer = mPeer;
+		peer->Connect(ip,port_outbound, 0, 0);
 		return 1;
 	}
 	return 0;
 }
 
 // disconnect
-a3i32 a3netDisconnect(a3_NetworkingManager* net)
+a3i32 a3_NetworkingManager::a3netDisconnect()
 {
-	if (net && net->peer)
+	if (mPeer)
 	{
-		RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
+		RakNet::RakPeerInterface* peer = mPeer;
 		a3ui16 i, j = peer->NumberOfConnections();
 		for (i = 0; i < j; ++i)
 			peer->CloseConnection(peer->GetSystemAddressFromIndex(i), true);
@@ -108,11 +118,11 @@ a3i32 a3netDisconnect(a3_NetworkingManager* net)
 
 
 // process inbound packets
-a3i32 a3netProcessInbound(a3_NetworkingManager* net)
+a3i32 a3_NetworkingManager::a3netProcessInbound()
 {
-	if (net && net->peer)
+	if (mPeer)
 	{
-		RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
+		RakNet::RakPeerInterface* peer = mPeer;
 		RakNet::Packet* packet;
 		RakNet::MessageID msg;
 		a3i32 count = 0;
@@ -177,7 +187,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 						*/
 						
 						//recieved connection/ proceed to send message to server it is notified
-						if (!net->isServer)
+						if (!isServer)
 						{
 							RakNet::BitStream bsOut[1];
 							bsOut->Write((RakNet::MessageID)ID_CLIENT_NOTIFIED);
@@ -188,7 +198,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					break;
 				case ID_GAME_EVENT:
 					{
-						if (net->isServer)
+						if (isServer)
 						{
 							printf("Recieved Event, resend to client");
 
@@ -199,7 +209,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 						{
 							printf("Recieved Event, adding to eventmanager");
 							NetEvent* nEvent = (NetEvent*)packet->data;
-							addEvent(net->eventMan,nEvent);
+							eventMan->addEvent(nEvent);
 						}
 					}
 				case ID_CLIENT_NOTIFIED:
@@ -215,7 +225,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					printf("The server is full.\n");
 					break;
 				case ID_DISCONNECTION_NOTIFICATION:
-					if (net->maxConnect_outbound) {
+					if (maxConnect_outbound) {
 						printf("A client has disconnected.\n");
 					}
 					else {
@@ -223,7 +233,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					}
 					break;
 				case ID_CONNECTION_LOST:
-					if (net->maxConnect_outbound) {
+					if (maxConnect_outbound) {
 						printf("A client lost the connection.\n");
 					}
 					else {
@@ -253,46 +263,51 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 }
 
 // process outbound packets
-a3i32 a3netProcessOutbound(a3_NetworkingManager* net)
+a3i32 a3_NetworkingManager::a3netProcessOutbound()
 {
-	if (net && net->peer)
+	if (mPeer)
 	{
 
 	}
 	return 0;
 }
-a3i32 a3netIdentity(a3_NetworkingManager* net, a3boolean isServer)
+a3i32 a3_NetworkingManager::a3netIdentity(a3boolean isServer)
 {
-	net->isServer = isServer;
+	isServer = isServer;
 
 	return 0;
 }
 
-a3i32 a3netProcessEvents(a3_NetworkingManager* net)
+a3i32 a3_NetworkingManager::a3netProcessEvents()
 {
-	int count = net->eventMan->nodeCount;
+	int count = eventMan->getNodeCount();
 	for (int i = 0; i < count; i++)
 	{
-		char* message;
-		int size = 0;
-		executeEvent(net->eventMan, message, size);
+		eventMan->executeEvent();
 	}
 
 	return 0;
 }
 
-a3i32 a3netSendMoveEvent(a3_NetworkingManager* net, a3i32 objID, a3i32 x, a3i32 y)
+a3i32 a3_NetworkingManager::a3netSendMoveEvent(a3i32 objID, a3i32 x, a3i32 y)
 {
-	if (!net->isServer)
+	if (!isServer)
 	{
-		RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
+		RakNet::RakPeerInterface* peer = mPeer;
 		RakNet::Time sendTime = RakNet::GetTime();
-		NetEvent* moveEvent = newMoveEvent(objID, x, y, sendTime);
+		NetEvent* moveEvent = new MoveEvent(objID, x, y, (a3i32)sendTime);
 
 		//send message
 		peer->Send(reinterpret_cast<char*>(&*moveEvent), sizeof(moveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(0), false);
 		//peer->Send(reinterpret_cast<char*>(&moveEvent), sizeof(moveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 		delete moveEvent;
 	}
+	return 0;
+}
+
+a3i32 a3_NetworkingManager::a3netSetType(netType type)
+{
+	networkType = type;
+	return 0;
 }
 //-----------------------------------------------------------------------------

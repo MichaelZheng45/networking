@@ -1,30 +1,23 @@
 #ifndef EVENTMANAGER_H
 #define EVENTMANAGER_H
 
-#include "EventList.h"
 #include "animal3D/animal3D.h"
+#include "EventList.h"
+#include "A3_DEMO/a3_Networking/Events/EventNodes/MoveEvent.h"
+#include "A3_DEMO/a3_Networking/Events/EventNodes/NetEvent.h"
 
-#ifdef __cplusplus
-extern "C"
+class EventManager
 {
-#else	// !__cplusplus
-typedef struct EventManager			EventManager;
-#endif	// __cplusplus
+public:
+	EventManager();
+	~EventManager();
 
+	a3i32 executeEvent();
+	a3boolean addEvent(NetEvent* newEvent);
+	a3i32 getNodeCount();
+private:
 
-struct EventManager
-{
 	EventList* mHead;
 	a3i32 nodeCount;
 };
-
-a3i32 executeEvent(EventManager* eventMan, char* message, int bufferSize);
-a3boolean addEvent(EventManager* eventMan, NetEvent* newEvent);
-
-#ifdef __cplusplus
-}
-#endif	// __cplusplus
-
-
-#endif // !EVENTMANAGER_H
-
+#endif // !EVENTMANAGER_H 

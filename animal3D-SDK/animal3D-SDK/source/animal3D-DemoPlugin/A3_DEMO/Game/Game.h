@@ -5,6 +5,8 @@
 #include "animal3D/animal3D.h"
 #include "Unit.h"
 
+#ifdef  __cplusplus
+
 enum gameType
 {	
 	PUSH_MODE,
@@ -14,21 +16,31 @@ enum gameType
 
 class a3_Game
 {
+public:
+	static a3_Game* getInstance();
+	
+	void runGame();
+
+	void initNetModeOne();
+	void initNetModeTwo();
+	void initNetModeThree();
+
+	void runNetModeOne();
+	void runNetModeTwo();
+	void runNetModeThree();
+
 	private:
+	a3_Game();
+	~a3_Game();
+
+	static a3_Game* instance;
+
 	a3i32 gameID;
 	a3_Unit ownedUnits[20];
 	a3_Unit unownedUnit[20];
-
-	public: 
-		void run(a3_Game* game);
-
-		void initNetModeOne();
-		void initNetModeTwo();
-		void initNetModeThree();
-
-		void runNetModeOne();
-		void runNetModeTwo();
-		void runNetModeThree();
 };
 
+#else
+	typedef struct a3_Game a3_Game;
+#endif
 #endif // !GAME_H

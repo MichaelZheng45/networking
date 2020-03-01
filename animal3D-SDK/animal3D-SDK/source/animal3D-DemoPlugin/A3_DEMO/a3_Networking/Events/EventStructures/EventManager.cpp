@@ -1,25 +1,33 @@
 #include "EventManager.h"
-#include "A3_DEMO/a3_Networking/Events/EventNodes/EventWrapper.h"
 
-a3i32 executeEvent(EventManager* eventMan, char* message, int bufferSize)
+EventManager::EventManager()
+{
+	nodeCount = 0;
+	mHead = nullptr;
+}
+
+EventManager::~EventManager()
+{
+	delete mHead;
+}
+
+a3i32 EventManager::executeEvent()
 {
 	//find current
-	EventList* current = eventMan->mHead;
+	EventList* current = mHead;
 
 	//if head is not empty
 	if (current == nullptr)
 	{
-		return -1;
 	}
 
 	//reset head to the next one
-	eventMan->mHead = eventMan->mHead->next;
+	mHead = mHead->next;
 
 	//get event
-	NetEvent_executeEvent(current->mEvent);
-	eventMan->nodeCount--;
+	current->mEvent->executeOrder();
+	nodeCount--;
 
-	delete current->mEvent;
 	delete current;
 	//remove event
 	//delete current;
@@ -27,38 +35,36 @@ a3i32 executeEvent(EventManager* eventMan, char* message, int bufferSize)
 }
 
 //befoere adding event the new event must be created as new
-a3boolean addEvent(EventManager* eventMan, NetEvent* newEvent)
+a3boolean EventManager::addEvent(NetEvent* newEvent)
 {
 	//iterate through eventlist, then check time stamp,
 	//if the next node's time stamp is greater than it then insert there
 	bool inserted = false;
 
-	EventList* current = eventMan->mHead;
+	EventList* current = mHead;
 
 	//if the list is empty create new head
-	if (eventMan->mHead == nullptr)
+	if (mHead == nullptr)
 	{
 		inserted = true;
-		EventList newEventList;
-		newEventList.mEvent = newEvent;
-		eventMan->mHead = &newEventList;
+		EventList* newEventList = new EventList(newEvent);
+		mHead = newEventList;
 	
-		eventMan->nodeCount++;
+		nodeCount++;
 		return true;
 	}
 
 	//if the head is higher than the new event, create new head
-	if (NetEvent_getTime(current->mEvent) >= NetEvent_getTime(newEvent))
+	if (current->mEvent->getTime() >= newEvent->getTime())
 	{
 		inserted = true;
-		EventList newEventList;
-		newEventList.mEvent = newEvent;
-		EventList* newHead = &newEventList;
+		EventList* newEventList = new EventList(newEvent);
+		EventList* newHead = newEventList;
 
-		newHead->next = eventMan->mHead;
-		eventMan->mHead = newHead;
+		newHead->next = mHead;
+		mHead = newHead;
 
-		eventMan->nodeCount++;
+		nodeCount++;
 		return true;
 	}
 
@@ -70,23 +76,22 @@ a3boolean addEvent(EventManager* eventMan, NetEvent* newEvent)
 		{
 			//curent is last in line
 			inserted = true;
-			EventList newEventList;
-			newEventList.mEvent = newEvent;
-			current->next = &newEventList;
+			EventList* newEventList = new EventList(newEvent);
+			current->next = newEventList;
+			nodeCount++;
+			return true;
 		}
 		//if the next node has a greater time stamp than current event
-		else if (NetEvent_getTime(current->next->mEvent) >= NetEvent_getTime(newEvent))
+		else if (current->next->mEvent->getTime() >= newEvent->getTime())
 		{
 			//inserted and relink the nodes
 			inserted = true;
-
-			EventList newEventList;
-			newEventList.mEvent = newEvent;
-			EventList* newNode = &newEventList;
+			EventList* newEventList = new EventList(newEvent);
+			EventList* newNode = newEventList;
 			newNode->next = current->next;
 			current->next = newNode;
 
-			eventMan->nodeCount++;
+			nodeCount++;
 			return true;
 		}
 		else
@@ -97,5 +102,10 @@ a3boolean addEvent(EventManager* eventMan, NetEvent* newEvent)
 	}
 
 	return false;
+}
+
+a3i32 EventManager::getNodeCount()
+{
+	return nodeCount;
 }
 

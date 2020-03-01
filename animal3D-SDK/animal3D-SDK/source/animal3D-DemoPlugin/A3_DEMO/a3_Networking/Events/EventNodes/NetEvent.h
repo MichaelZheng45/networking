@@ -1,10 +1,7 @@
-#ifndef  NETEVENT_H
-#define EVENT_H
-
+#ifndef NETEVENT_H
+#define	NETEVENT_H
 
 #include "animal3D/animal3D.h"
-
-
 #include "A3_DEMO/a3_Networking/NetworkDataSource.h"
 
 class NetEvent
@@ -14,8 +11,8 @@ class NetEvent
 	~NetEvent();
 
 	virtual void executeOrder() = 0;
-	float getTime() {return timeStamp;}
-	void setTime(a3i32 time) {timeStamp = time;}
+	a3i32 getTime();
+	void setTime(a3i32 time) ;
 
 	protected:
 

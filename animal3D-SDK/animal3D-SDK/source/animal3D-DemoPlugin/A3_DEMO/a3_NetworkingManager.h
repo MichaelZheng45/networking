@@ -27,69 +27,71 @@
 
 //-----------------------------------------------------------------------------
 // animal3D framework includes
-
 #include "animal3D/animal3D.h"
-
+#include "RakNet/GetTime.h"
+#include "RakNet/RakPeerInterface.h"
 #include "a3_Networking/Events/EventStructures/EventManager.h"
 //-----------------------------------------------------------------------------
 
-#ifdef __cplusplus
-extern "C"
-{
-#else	// !__cplusplus
-	typedef struct a3_NetworkingManager				a3_NetworkingManager;
-#endif	// __cplusplus
+#ifdef  __cplusplus
 
-
-//-----------------------------------------------------------------------------
+	enum netType
+	{
+		NETYPE_PUSH,
+		NETYPE_SHARED,
+		NETYPE_COUPLED
+	};
 
 	typedef a3byte a3netAddressStr[16];
 
 	// networking manager
-	struct a3_NetworkingManager
+	class a3_NetworkingManager
 	{
+		public:
+		a3_NetworkingManager();
+		~a3_NetworkingManager();
+
+		// startup networking
+		a3i32 a3netStartup( a3ui16 port_inbound, a3ui16 port_outbound, a3ui16 maxConnect_inbound, a3ui16 maxConnect_outbound);
+
+		// shutdown networking
+		a3i32 a3netShutdown();
+
+		// connect
+		a3i32 a3netConnect( a3netAddressStr const ip);
+
+		// disconnect
+		a3i32 a3netDisconnect();
+
+		// process inbound packets
+		a3i32 a3netProcessInbound();
+
+		// process outbound packets
+		a3i32 a3netProcessOutbound();
+
+		a3i32 a3netIdentity(a3boolean isServer);
+
+		a3i32 a3netSetType(netType type);
+
+		a3i32 a3netProcessEvents();
+
+		a3i32 a3netSendMoveEvent( a3i32 objID, a3i32 x, a3i32 y);
+
+		private:
 		a3ui16 port_inbound, port_outbound;
 		a3ui16 maxConnect_inbound, maxConnect_outbound;
-		void* peer;
+		RakNet::RakPeerInterface* mPeer;
 
 		a3boolean isServer;
-
-		EventManager eventMan[1];
+		netType networkType;
+		EventManager* eventMan;
 	};
 
 
 //-----------------------------------------------------------------------------
-
-	// startup networking
-	a3i32 a3netStartup(a3_NetworkingManager* net, a3ui16 port_inbound, a3ui16 port_outbound, a3ui16 maxConnect_inbound, a3ui16 maxConnect_outbound);
-
-	// shutdown networking
-	a3i32 a3netShutdown(a3_NetworkingManager* net);
-
-	// connect
-	a3i32 a3netConnect(a3_NetworkingManager* net, a3netAddressStr const ip);
-
-	// disconnect
-	a3i32 a3netDisconnect(a3_NetworkingManager* net);
-
-
-	// process inbound packets
-	a3i32 a3netProcessInbound(a3_NetworkingManager* net);
-
-	// process outbound packets
-	a3i32 a3netProcessOutbound(a3_NetworkingManager* net);
-
-	a3i32 a3netIdentity(a3_NetworkingManager* net, a3boolean isServer);
-
-	a3i32 a3netProcessEvents(a3_NetworkingManager* net);
-
-	a3i32 a3netSendMoveEvent(a3_NetworkingManager* net, a3i32 objID, a3i32 x, a3i32 y);
-//-----------------------------------------------------------------------------
-
-
-#ifdef __cplusplus
-}
-#endif	// __cplusplus
-
+#else
+	typedef struct a3_NetworkingManager a3_NetworkingManager
+	
+#endif //  __cplusplus
 
 #endif	// !__ANIMAL3D_NETWORKINGMANAGER_H

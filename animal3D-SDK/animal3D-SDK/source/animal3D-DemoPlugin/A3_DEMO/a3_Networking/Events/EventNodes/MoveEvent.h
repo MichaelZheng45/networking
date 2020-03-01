@@ -2,7 +2,6 @@
 #define MOVEEVENT_H
 
 #include "NetEvent.h"
-
 class MoveEvent : public NetEvent
 {
 	public: 

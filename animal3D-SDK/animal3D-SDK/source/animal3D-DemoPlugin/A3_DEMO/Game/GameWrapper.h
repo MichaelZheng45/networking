@@ -8,14 +8,8 @@
 extern "C" {
 #endif
 
-typedef struct a3_Game a3_Game;
-
-a3_Game* newA3_Game();
-
-static a3_Game* getA3_Game();
-
 void updateGame();
-void initGame(gameType type, a3boolean isServer); 
+void initGame(int type, a3boolean isServer); 
 
 //get ownedunit to draw
 //get unowned unit to draw
