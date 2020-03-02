@@ -61,11 +61,10 @@ a3i32 a3_NetworkingManager::a3netStartup( a3ui16 nPort_inbound, a3ui16 nPort_out
 			// choose startup settings based on 
 			a3boolean const isServer = port_inbound && maxConnect_inbound;
 			a3boolean const isClient = port_outbound && maxConnect_outbound;
-			if (peer->Startup(maxConnect_inbound + maxConnect_outbound, socket + isClient, isServer + isClient) == RakNet::StartupResult::RAKNET_STARTED)
+			if (peer->Startup(maxConnect_inbound + maxConnect_outbound, socket, 1) == RakNet::StartupResult::RAKNET_STARTED)
 			{
 				peer->SetMaximumIncomingConnections(maxConnect_inbound);
 				peer->SetOccasionalPing(true);
-
 
 				mPeer = peer;
 
@@ -135,6 +134,7 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 		{
 			RakNet::BitStream bs_in(packet->data, packet->length, false);
 			bs_in.Read(msg);
+
 			switch (msg)
 			{
 				// check for timestamp and process
@@ -158,6 +158,7 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 				case ID_CONNECTION_REQUEST_ACCEPTED:
 					printf("Our connection request has been accepted.\n");
 					{
+						printf("yes");
 						/*
 						RakNet::BitStream bsOut[1];
 
