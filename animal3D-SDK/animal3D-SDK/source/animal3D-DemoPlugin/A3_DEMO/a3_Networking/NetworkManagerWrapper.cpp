@@ -1,5 +1,6 @@
 #include "NetworkManagerWrapper.h"
 #include "A3_DEMO/a3_NetworkingManager.h"
+
 extern "C"
 {
 	a3_NetworkingManager* newNetworkManager()

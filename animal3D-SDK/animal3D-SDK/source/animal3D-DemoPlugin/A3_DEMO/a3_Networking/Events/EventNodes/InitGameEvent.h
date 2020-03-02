@@ -2,6 +2,7 @@
 #define INITGAMEEVENT_H
 
 #include "NetEvent.h"
+#pragma pack(push, 1)
 class InitGameEvent : public NetEvent
 {
 	public: 
@@ -10,11 +11,11 @@ class InitGameEvent : public NetEvent
 	virtual void executeOrder();
 
 	private:
-
+		unsigned char messageType;
 	a3i32 type;
 	a3i32 xS;
 	a3i32 yS;
 };
-
+#pragma pack(pop)
 
 #endif // ! INITGAMEEVENT_H

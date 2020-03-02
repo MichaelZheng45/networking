@@ -1,8 +1,7 @@
 #include "NetEvent.h"
 
-NetEvent::NetEvent(a3i32 addTime, a3_NetGameMessages type)
+NetEvent::NetEvent(a3i32 addTime)
 {
-	messageType = type;
 	timeStamp = addTime;
 }
 
