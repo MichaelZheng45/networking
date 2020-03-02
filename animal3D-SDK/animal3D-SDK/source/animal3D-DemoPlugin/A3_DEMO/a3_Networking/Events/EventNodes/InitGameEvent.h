@@ -10,6 +10,7 @@ class InitGameEvent : public NetEvent
 	virtual void executeOrder();
 
 	private:
+		a3_NetGameMessages messageType;
 	a3i32 type;
 	a3i32 xS;
 	a3i32 yS;

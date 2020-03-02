@@ -23,8 +23,8 @@ a3_Game::a3_Game(a3boolean isServer, gameType id, a3i32 nxSize, a3i32 nySize)
 			{
 				a3i32 xPos = rand() % xSize;
 				a3i32 yPos = rand() % ySize;
-				ownedUnits[i].xPos;
-				ownedUnits[i].yPos;
+				ownedUnits[i].xPos = xPos;
+				ownedUnits[i].yPos = yPos;
 
 				ownedUnits[i].xDir = rand() % 7 + (-3);
 				ownedUnits[i].yDir = rand() % 7 + (-3);
@@ -41,8 +41,8 @@ a3_Game::a3_Game(a3boolean isServer, gameType id, a3i32 nxSize, a3i32 nySize)
 		{
 			a3i32 xPos = rand() % xSize;
 			a3i32 yPos = rand() % ySize;
-			ownedUnits[i].xPos;
-			ownedUnits[i].yPos;
+			ownedUnits[i].xPos = xPos;
+			ownedUnits[i].yPos = yPos;
 
 			ownedUnits[i].xDir = rand() % 7 + (-3);
 			ownedUnits[i].yDir = rand() % 7 + (-3);
@@ -105,7 +105,7 @@ void a3_Game::runNetModePush()
 			{
 				ownedUnits[i].yPos = ySize;
 			}
-			if (ownedUnits[i].yPos < ySize)
+			if (ownedUnits[i].yPos > ySize)
 			{
 				ownedUnits[i].yPos = 0;
 			}

@@ -35,8 +35,10 @@ public:
 	a3_Game(a3boolean isServer, gameType id, a3i32 xSize, a3i32 ySize);
 	~a3_Game();
 
-	private:
+	a3_Unit ownedUnits[20];
+	a3_Unit unownedUnit[20];
 
+	private:
 
 	static a3_Game* instance;
 
@@ -44,8 +46,7 @@ public:
 	a3i32 ySize;
 	a3boolean server;
 	gameType gameTypeID;
-	a3_Unit ownedUnits[20];
-	a3_Unit unownedUnit[20];
+
 };
 
 #else

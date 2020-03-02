@@ -40,7 +40,6 @@ a3boolean EventManager::addEvent(NetEvent* newEvent)
 	//iterate through eventlist, then check time stamp,
 	//if the next node's time stamp is greater than it then insert there
 	bool inserted = false;
-
 	EventList* current = mHead;
 
 	//if the list is empty create new head

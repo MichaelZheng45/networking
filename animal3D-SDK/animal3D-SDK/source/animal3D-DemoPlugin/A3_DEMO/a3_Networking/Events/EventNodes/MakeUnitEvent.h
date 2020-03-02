@@ -9,6 +9,7 @@ class MakeUnitEvent : public NetEvent
 	virtual void executeOrder();
 
 	private:
+		a3_NetGameMessages messageType;
 		a3i32 mObjID;
 		a3i32 x;
 		a3i32 y;

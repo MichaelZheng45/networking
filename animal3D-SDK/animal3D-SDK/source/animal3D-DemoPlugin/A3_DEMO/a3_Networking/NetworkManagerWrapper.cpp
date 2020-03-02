@@ -4,16 +4,17 @@ extern "C"
 {
 	a3_NetworkingManager* newNetworkManager()
 	{
-		a3_NetworkingManager* instance = a3_NetworkingManager::getInstance();
-		instance = new a3_NetworkingManager();
-		return instance;
+		a3_NetworkingManager* netInstance;
+		netInstance = new a3_NetworkingManager();
+		a3_NetworkingManager::setInstance(netInstance);
+		return netInstance;
 	}
 
 	// startup networking
 	a3i32 a3netWStartup(a3_NetworkingManager* net, a3ui16 port_inbound, a3ui16 port_outbound, a3ui16 maxConnect_inbound, a3ui16 maxConnect_outbound)
 	{
-		net->a3netStartup(port_inbound, port_outbound, maxConnect_inbound, maxConnect_outbound);
-		return 0;
+		return net->a3netStartup(port_inbound, port_outbound, maxConnect_inbound, maxConnect_outbound);
+
 	}
 
 	// shutdown networking
@@ -26,8 +27,8 @@ extern "C"
 	// connect
 	a3i32 a3netWConnect(a3_NetworkingManager* net, a3netAddressStr const ip)
 	{
-		net->a3netConnect(ip);
-		return 0;
+		return net->a3netConnect(ip);
+
 	}
 
 	// disconnect

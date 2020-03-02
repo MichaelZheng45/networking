@@ -43,7 +43,7 @@ a3_NetworkingManager::~a3_NetworkingManager()
 }
 
 // startup networking
-a3i32 a3_NetworkingManager::a3netStartup( a3ui16 port_inbound, a3ui16 port_outbound, a3ui16 maxConnect_inbound, a3ui16 maxConnect_outbound)
+a3i32 a3_NetworkingManager::a3netStartup( a3ui16 nPort_inbound, a3ui16 nPort_outbound, a3ui16 nMaxConnect_inbound, a3ui16 nMaxConnect_outbound)
 {
 	if (mPeer == nullptr)
 	{
@@ -54,7 +54,10 @@ a3i32 a3_NetworkingManager::a3netStartup( a3ui16 port_inbound, a3ui16 port_outbo
 				RakNet::SocketDescriptor(port_inbound, 0),		// server settings
 				RakNet::SocketDescriptor(),//port_outbound, 0),	// client settings
 			};
-
+			port_inbound = nPort_inbound;
+			port_outbound = nPort_outbound;
+			maxConnect_inbound = nMaxConnect_inbound;
+			maxConnect_outbound = nMaxConnect_outbound;
 			// choose startup settings based on 
 			a3boolean const isServer = port_inbound && maxConnect_inbound;
 			a3boolean const isClient = port_outbound && maxConnect_outbound;
@@ -63,11 +66,8 @@ a3i32 a3_NetworkingManager::a3netStartup( a3ui16 port_inbound, a3ui16 port_outbo
 				peer->SetMaximumIncomingConnections(maxConnect_inbound);
 				peer->SetOccasionalPing(true);
 
-				port_inbound = port_inbound;
-				port_outbound = port_outbound;
-				maxConnect_inbound = maxConnect_inbound;
-				maxConnect_outbound = maxConnect_outbound;
-				peer = peer;
+
+				mPeer = peer;
 
 				eventMan = new EventManager();
 				return 1;
@@ -129,7 +129,6 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 		RakNet::Packet* packet;
 		RakNet::MessageID msg;
 		a3i32 count = 0;
-
 		for (packet = peer->Receive();
 			packet;
 			peer->DeallocatePacket(packet), packet = peer->Receive(), ++count)
@@ -140,18 +139,6 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 			{
 				// check for timestamp and process
 			case ID_TIMESTAMP:
-				bs_in.Read(msg);
-				// ****TO-DO: handle timestamp
-				RakNet::Time sendTime,recieveTime, dt;
-				bs_in.Read(sendTime);
-
-				recieveTime = RakNet::GetTime();
-				printf("Send time: %u \n", (unsigned int)sendTime);
-				printf("Recieve time time: %u \n", (unsigned int)recieveTime);
-	
-				dt = recieveTime - sendTime;
-				printf("Latency: %u \n", (unsigned int)dt);
-				
 
 				//dt = peer->GetClockDifferential(packet->systemAddress);
 				//printf("Clock diff: %u \n", (unsigned int)dt);
@@ -193,24 +180,14 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 							bsOut->Write((RakNet::MessageID)ID_CLIENT_NOTIFIED);
 							peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 						}
-
 					}
 					break;
 				case ID_GAME_EVENT:
 					{
-						if (isServer)
-						{
-							printf("Recieved Event, resend to client");
-
-							peer->Send((char*)packet->data, sizeof(packet->data), HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, true);
-							
-						}
-						else
-						{
-							printf("Recieved Event, adding to eventmanager");
-							NetEvent* nEvent = (NetEvent*)packet->data;
-							eventMan->addEvent(nEvent);
-						}
+						printf("Recieved Event, adding to eventmanager");
+						NetEvent* nEvent = (NetEvent*)packet->data;
+						eventMan->addEvent(nEvent);
+						
 					}
 				case ID_CLIENT_NOTIFIED:
 					printf("Client is notified.\n");

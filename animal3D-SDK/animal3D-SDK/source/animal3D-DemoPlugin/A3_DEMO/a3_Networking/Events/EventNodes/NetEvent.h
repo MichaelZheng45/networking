@@ -7,7 +7,7 @@
 class NetEvent
 {
 	public:
-	NetEvent(a3_NetGameMessages type, a3i32 addTime);
+	NetEvent(a3i32 addTime);
 	~NetEvent();
 
 	virtual void executeOrder() = 0;
@@ -15,8 +15,6 @@ class NetEvent
 	void setTime(a3i32 time) ;
 
 	protected:
-
-	a3_NetGameMessages messageType;
 	a3i32 timeStamp;
 };
 

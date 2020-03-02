@@ -49,12 +49,12 @@
 	{
 		public:
 		static a3_NetworkingManager* getInstance() {return instance;}
-
+		static void setInstance(a3_NetworkingManager* inst) {instance = inst;}
 		a3_NetworkingManager();
 		~a3_NetworkingManager();
 
 		// startup networking
-		a3i32 a3netStartup( a3ui16 port_inbound, a3ui16 port_outbound, a3ui16 maxConnect_inbound, a3ui16 maxConnect_outbound);
+		a3i32 a3netStartup( a3ui16 nPort_inbound, a3ui16 nPort_outbound, a3ui16 nMaxConnect_inbound, a3ui16 nMaxConnect_outbound);
 
 		// shutdown networking
 		a3i32 a3netShutdown();

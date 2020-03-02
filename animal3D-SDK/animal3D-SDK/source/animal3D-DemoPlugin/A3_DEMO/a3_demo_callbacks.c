@@ -42,19 +42,19 @@
 
 void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 {
-	a3netAddressStr const ipAddress = "216.93.149.186";
-	a3ui16 const port_server = 60006;
-	a3ui16 const port_client = 60005;
+	a3netAddressStr const ipAddress = "127.0.0.1";
+	a3ui16 const port_server = 60000;
+	a3ui16 const port_client = 60000;
 	a3ui16 const maxConnections_server = 16;
 	a3ui16 const maxConnections_client = 1;
 	a3netWIdentity(demoState->net, isServer);
 	demoState->isServer = isServer;
 	if (isServer)
 	{
-		if (a3netWStartup(demoState->net, port_server, 0, maxConnections_server, 0) > 0)
+		a3i32 in = a3netWStartup(demoState->net, port_server, 0, maxConnections_server, 0);
+		if (in > 0)
 		{
 			printf("\n STARTED NETWORKING AS SERVER \n");
-
 		}		
 	}
 	else
@@ -189,7 +189,7 @@ extern "C"
 	A3DYLIBSYMBOL void a3demoCB_mouseWheel(a3_DemoState *demoState, a3i32 delta, a3i32 cursorX, a3i32 cursorY);
 	A3DYLIBSYMBOL void a3demoCB_mouseMove(a3_DemoState *demoState, a3i32 cursorX, a3i32 cursorY);
 	A3DYLIBSYMBOL void a3demoCB_mouseLeave(a3_DemoState *demoState);
-
+		
 #ifdef __cplusplus
 }
 #endif	// __cplusplus
@@ -333,7 +333,43 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 			a3netWProcessInbound(demoState->net);
 			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
 			a3netWProcessOutbound(demoState->net);
+			
+			updateGame();
+			
+			if (checkInit())
+			{
+				//draw stuff
+				a3i32 ownedCount = getOwnedList();
+				for (a3i32 i = 0; i < ownedCount; i++)
+				{
+					a3i32 xPos;
+					a3i32 yPos;
 
+					if (getOwnedUnit(i, &xPos, &yPos))
+					{
+						a3f32 height = (a3f32)demoState->windowHeight;
+						a3f32 width = (a3f32)demoState->windowWidth;
+
+						a3textDraw(demoState->text, (a3f32)xPos / width, (a3f32)yPos / height, -1, 0, 0, 0, 1, "%i", i);
+					}
+				}
+
+				a3i32 unOwnedCount = getUnownedList();
+				for (a3i32 i = 0; i < unOwnedCount; i++)
+				{
+					a3i32 xPos;
+					a3i32 yPos;
+
+					if (getUnownedUnit(i, &xPos, &yPos))
+					{
+						a3f32 height = (a3f32)demoState->windowHeight;
+						a3f32 width = (a3f32)demoState->windowWidth;
+
+						a3textDraw(demoState->text, (a3f32)xPos / width, (a3f32)yPos / height, -1, 1, 1, 1, 1, "%i", i);
+					}
+				}
+			}
+		
 		//	a3netProcessEvents(demoState->net, demoState->game);
 
 			a3demo_render(demoState);
@@ -478,7 +514,24 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 	case '2':
 		a3demo_startNetworking(demoState, 0);
 		break;
-
+	case '3':
+		if (demoState->isServer)
+		{
+			initGame(0, true, demoState->windowWidth, demoState->windowWidth);
+		}
+		break;
+	case '4':
+		if (demoState->isServer)
+		{
+			initGame(1, true, demoState->windowWidth, demoState->windowWidth);
+		}
+		break;
+	case '5':
+		if (demoState->isServer)
+		{
+			initGame(2, true, demoState->windowWidth, demoState->windowWidth);
+		}
+		break;
 
 		// reload (T) or toggle (t) text
 	case 'T':
@@ -492,67 +545,6 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 			a3textRelease(demoState->text);
 			demoState->textInit = 0;
 		}
-		break;
-	case 't':
-		demoState->textMode = (demoState->textMode + 1) % demoState->textModeCount;
-		break;
-
-		// reload all shaders in real-time
-	case 'P':
-		a3demo_unloadShaders(demoState);
-		a3demo_loadShaders(demoState);
-		break;
-
-
-		// change pipeline mode
-	case '.':
-		demoState->demoMode = (demoState->demoMode + 1) % demoState->demoModeCount;
-		break;
-	case ',':
-		demoState->demoMode = (demoState->demoMode + demoState->demoModeCount - 1) % demoState->demoModeCount;
-		break;
-
-		// change pipeline stage
-	case '>':
-		demoSubMode = demoState->demoSubMode[demoState->demoMode] = (demoSubMode + 1) % demoSubModeCount;
-		break;
-	case '<':
-		demoSubMode = demoState->demoSubMode[demoState->demoMode] = (demoSubMode + demoSubModeCount - 1) % demoSubModeCount;
-		break;
-
-		// change stage output
-	case '}':
-		demoState->demoOutputMode[demoState->demoMode][demoSubMode] = (demoOutput + 1) % demoOutputCount;
-		break;
-	case '{':
-		demoState->demoOutputMode[demoState->demoMode][demoSubMode] = (demoOutput + demoOutputCount - 1) % demoOutputCount;
-		break;
-
-
-		// toggle grid
-	case 'g':
-		demoState->displayGrid = 1 - demoState->displayGrid;
-		break;
-
-		// toggle world axes
-	case 'x':
-		demoState->displayWorldAxes = 1 - demoState->displayWorldAxes;
-		break;
-
-		// toggle object axes
-	case 'z':
-		demoState->displayObjectAxes = 1 - demoState->displayObjectAxes;
-		break;
-
-		// toggle tangent bases on vertices or other
-	case 'B':
-		demoState->displayTangentBases = 1 - demoState->displayTangentBases;
-		break;
-
-
-		// update animation
-	case 'm':
-		demoState->updateAnimation = 1 - demoState->updateAnimation;
 		break;
 	}
 
