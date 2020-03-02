@@ -2,7 +2,7 @@
 #include "A3_DEMO/Game/Game.h"
 
 
-MoveEvent::MoveEvent(a3i32 objID, a3i32 newX, a3i32 newY, a3i32 addTime) : NetEvent( addTime)
+MoveEvent::MoveEvent(a3i32 objID, a3i32 newX, a3i32 newY, a3i32 addTime) : NetEvent( addTime, ID_GAME_EVENT)
 {	
 	messageType = ID_GAME_EVENT;
 	mObjID = objID;

@@ -50,18 +50,20 @@ a3i32 a3_NetworkingManager::a3netStartup( a3ui16 nPort_inbound, a3ui16 nPort_out
 		RakNet::RakPeerInterface* peer = RakNet::RakPeerInterface::GetInstance();
 		if (peer != nullptr)
 		{
-			RakNet::SocketDescriptor socket[2] = {
-				RakNet::SocketDescriptor(port_inbound, 0),		// server settings
-				RakNet::SocketDescriptor(),//port_outbound, 0),	// client settings
-			};
 			port_inbound = nPort_inbound;
 			port_outbound = nPort_outbound;
 			maxConnect_inbound = nMaxConnect_inbound;
 			maxConnect_outbound = nMaxConnect_outbound;
+
+			RakNet::SocketDescriptor socket[2] = {
+				RakNet::SocketDescriptor(port_inbound, 0),		// server settings
+				RakNet::SocketDescriptor(),	// client settings
+			};
+
 			// choose startup settings based on 
 			a3boolean const isServer = port_inbound && maxConnect_inbound;
 			a3boolean const isClient = port_outbound && maxConnect_outbound;
-			if (peer->Startup(maxConnect_inbound + maxConnect_outbound, socket, 1) == RakNet::StartupResult::RAKNET_STARTED)
+			if (peer->Startup(maxConnect_inbound + maxConnect_outbound, socket + isClient, 1) == RakNet::StartupResult::RAKNET_STARTED)
 			{
 				peer->SetMaximumIncomingConnections(maxConnect_inbound);
 				peer->SetOccasionalPing(true);

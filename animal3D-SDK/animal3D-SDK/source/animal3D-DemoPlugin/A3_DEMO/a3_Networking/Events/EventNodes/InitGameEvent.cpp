@@ -1,7 +1,7 @@
 #include "A3_DEMO/Game/Game.h"
 #include "InitGameEvent.h"
 
-InitGameEvent::InitGameEvent(a3i32 newGameID, a3i32 addTime, a3i32 xSize, a3i32 ySize) : NetEvent( addTime)
+InitGameEvent::InitGameEvent(a3i32 newGameID, a3i32 addTime, a3i32 xSize, a3i32 ySize) : NetEvent( addTime, ID_GAME_EVENT)
 {
 	messageType = ID_GAME_EVENT;
 	type = newGameID;

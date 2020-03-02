@@ -1,6 +1,6 @@
 #include "MakeUnitEvent.h"
 #include "A3_DEMO/Game/Game.h"
-MakeUnitEvent::MakeUnitEvent(a3i32 objID, a3i32 newX, a3i32 newY, a3i32 addTime) : NetEvent(addTime)
+MakeUnitEvent::MakeUnitEvent(a3i32 objID, a3i32 newX, a3i32 newY, a3i32 addTime) : NetEvent(addTime, ID_GAME_EVENT)
 {
 	messageType = ID_GAME_EVENT;
 	mObjID = objID;
