@@ -28,6 +28,7 @@
 #include "A3_DEMO/a3_Networking/Events/EventNodes/MoveEvent.h"
 #include "A3_DEMO/a3_Networking/Events/EventNodes/InitGameEvent.h"
 #include "RakNet/BitStream.h"
+#include <string>
 //-----------------------------------------------------------------------------
 // networking stuff
 a3_NetworkingManager* a3_NetworkingManager::instance = 0;
@@ -193,8 +194,8 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 						RakNet::BitStream bsIn(packet->data, packet->length, false);
 						bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
 						bsIn.Read(rs);
-						InitGameEvent* nEvent = (InitGameEvent*)&rs;
-						eventMan->addEvent(nEvent);
+						InitGameEvent nEvent = *(InitGameEvent*)(rs.C_String());
+						eventMan->addEvent(&nEvent);
 						
 					}
 					break;
@@ -206,8 +207,10 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 						RakNet::BitStream bsIn(packet->data, packet->length, false);
 						bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
 						bsIn.Read(rs);
-						MoveEvent* nEvent = (MoveEvent*)&rs;
-						eventMan->addEvent(nEvent);
+						
+						MoveEvent nEvent = *(MoveEvent*)(rs.C_String());
+						nEvent;
+						eventMan->addEvent(&nEvent);
 
 					}
 					break;
@@ -299,12 +302,19 @@ a3i32 a3_NetworkingManager::a3netSendMoveEvent(a3i32 objID, a3i32 x, a3i32 y)
 
 	RakNet::BitStream bsOut[1];
 
-	//bsOut->Write((RakNet::MessageID)ID_GAME_EVENT);
-	bsOut->Write(mes);
+	bsOut->Write((RakNet::MessageID)ID_GAME_MOVE_EVENT);
+
+	RakNet::RakString rs;
+	rs.Set(mes);
+	bsOut->Write(rs);
 
 	peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
-	//MoveEvent nEvent = *(MoveEvent*)mes;
 
+	mes = "";
+	int length = sizeof(rs.C_String());
+	std::strncpy(mes, rs.C_String(),length);
+	mes[length] = '\0';
+	MoveEvent oEvent = *(MoveEvent*)(mes);
 	return 0;
 }
 
@@ -313,12 +323,19 @@ a3i32 a3_NetworkingManager::a3netInitGameEvent(a3i32 id, a3i32 xSize, a3i32 ySiz
 	RakNet::RakPeerInterface* peer = mPeer;
 	RakNet::Time sendTime = RakNet::GetTime();
 
-
 	//send message
 	//peer->Send(reinterpret_cast<char*>(&*moveEvent), sizeof(moveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(0), false);
-	char* mes = reinterpret_cast<char*>(&InitGameEvent(id, (a3i32)sendTime, xSize, ySize));
-	peer->Send(mes, sizeof(mes), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+	char* mes = reinterpret_cast<char*>(&InitGameEvent(id, xSize, ySize, (a3i32)sendTime));
 
+	RakNet::BitStream bsOut[1];
+
+	bsOut->Write((RakNet::MessageID)ID_GAME_INIT_EVENT);
+	
+	RakNet::RakString rs;
+	rs.Set(mes);
+	bsOut->Write(rs);
+
+	peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 	return 0;
 }
 
