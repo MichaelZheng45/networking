@@ -320,6 +320,8 @@ A3DYLIBSYMBOL a3i32 a3demoCB_display(a3_DemoState *demoState)
 	return 1;
 }
 
+#include "GL/glew.h"
+
 // window idles
 A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 {
@@ -329,13 +331,17 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 		if (a3timerUpdate(demoState->renderTimer) > 0)
 		{
 			// render timer ticked, update demo state and draw
-			a3demo_input(demoState, demoState->renderTimer->secondsPerTick);
+			//a3demo_input(demoState, demoState->renderTimer->secondsPerTick);
 			a3netWProcessInbound(demoState->net);
-			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
 			a3netWProcessOutbound(demoState->net);
 			
 			updateGame();
 			
+			a3f32 height = (a3f32)demoState->windowHeight;
+			a3f32 width = (a3f32)demoState->windowWidth;
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			a3textDraw(demoState->text, 0, 0, -1, 1, 0, 0, 1, "%i", 420); //position is in -1 to 1 //VERY IMPORTANT STUFF
 			if (checkInit())
 			{
 				//draw stuff
@@ -372,8 +378,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 		
 		//	a3netProcessEvents(demoState->net, demoState->game);
 
-			a3demo_render(demoState);
-
+		
 			// update input
 			a3mouseUpdate(demoState->mouse);
 			a3keyboardUpdate(demoState->keyboard);

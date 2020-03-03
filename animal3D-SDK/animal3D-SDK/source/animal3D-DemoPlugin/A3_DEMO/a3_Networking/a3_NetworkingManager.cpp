@@ -299,7 +299,7 @@ a3i32 a3_NetworkingManager::a3netSendMoveEvent(a3i32 objID, a3i32 x, a3i32 y)
 
 	RakNet::BitStream bsOut[1];
 
-	bsOut->Write((RakNet::MessageID)ID_GAME_EVENT);
+	//bsOut->Write((RakNet::MessageID)ID_GAME_EVENT);
 	bsOut->Write(mes);
 
 	peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
