@@ -15,7 +15,14 @@ void a3_Game::createInstance(bool isServer, gameType id, a3i32 nxSize,a3i32 nySi
 
 a3_Game::a3_Game(a3boolean isServer, gameType id, a3i32 nxSize, a3i32 nySize)
 {
-	srand(time(0));
+	if (isServer)
+	{
+		std::srand(16412);
+	}
+	else
+	{
+		srand(81635415);
+	}
 
 	server = isServer;
 	gameTypeID = id;
