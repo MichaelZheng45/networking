@@ -356,7 +356,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 						a3f32 height = (a3f32)demoState->windowHeight;
 						a3f32 width = (a3f32)demoState->windowWidth;
 
-						a3textDraw(demoState->text, (a3f32)xPos / width, (a3f32)yPos / height, -1, 0, 0, 0, 1, "%i", i);
+						a3textDraw(demoState->text, (a3f32)xPos / width, (a3f32)yPos / height, -1, 1, 0, 0, 1, "%i", i);
 					}
 				}
 
@@ -371,7 +371,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 						a3f32 height = (a3f32)demoState->windowHeight;
 						a3f32 width = (a3f32)demoState->windowWidth;
 
-						a3textDraw(demoState->text, (a3f32)xPos / width, (a3f32)yPos / height, -1, 1, 1, 1, 1, "%i", i);
+						a3textDraw(demoState->text, (a3f32)xPos / width, (a3f32)yPos / height, -1, 0, 1, 0, 1, "%i", i);
 					}
 				}
 			}
