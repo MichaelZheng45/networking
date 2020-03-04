@@ -11,6 +11,5 @@ InitGameEvent::InitGameEvent(a3i32 newGameID, a3i32 addTime, a3i32 xSize, a3i32 
 
 void InitGameEvent::executeOrder()
 {
-	a3_Game* gameInstance = a3_Game::getInstance();
-	gameInstance = new a3_Game(false, static_cast<gameType>(type), xS, yS);
+	a3_Game::createInstance(false, static_cast<gameType>(type), xS, yS);
 }

@@ -188,7 +188,7 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 					break;
 				case ID_GAME_INIT_EVENT:
 					{
-						printf("Recieved Event, adding to eventmanager");
+						printf("Recieved Init Event, adding to eventmanager \n");
 						//MoveEvent nEvent = *(MoveEvent*)mes;
 						RakNet::RakString rs;
 						RakNet::BitStream bsIn(packet->data, packet->length, false);
@@ -206,12 +206,14 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 						bsIn.Read(y);
 						bsIn.Read(time);
 						InitGameEvent* nEvent = new InitGameEvent(id, time, x,y);
-						eventMan->addEvent(nEvent);
+						nEvent->executeOrder();
+					//	eventMan->addEvent(nEvent);
+
 					}
 					break;
 				case ID_GAME_MOVE_EVENT:
 					{
-						printf("Recieved Event, adding to eventmanager");
+						printf("Recieved Move Event, adding to eventmanager \n");
 						//MoveEvent nEvent = *(MoveEvent*)mes;
 						RakNet::RakString rs;
 						RakNet::BitStream bsIn(packet->data, packet->length, false);
@@ -230,6 +232,8 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 						bsIn.Read(time);
 						MoveEvent* nEvent = new MoveEvent(id,x,y,time);
 						eventMan->addEvent(nEvent);
+						char* mess = "okay";
+						printf(mess);
 					}
 					break;
 				case ID_CLIENT_NOTIFIED:
@@ -300,10 +304,13 @@ a3i32 a3_NetworkingManager::a3netIdentity(a3boolean isServer)
 
 a3i32 a3_NetworkingManager::a3netProcessEvents()
 {
-	int count = eventMan->getNodeCount();
-	for (int i = 0; i < count; i++)
+	if (eventMan != nullptr)
 	{
-		eventMan->executeEvent();
+		int count = eventMan->getNodeCount();
+		for (int i = 0; i < count; i++)
+		{
+			eventMan->executeEvent();
+		}
 	}
 
 	return 0;
@@ -355,7 +362,7 @@ a3i32 a3_NetworkingManager::a3netInitGameEvent(a3i32 id, a3i32 xSize, a3i32 ySiz
 	bsOut->Write(id);
 	bsOut->Write(xSize);
 	bsOut->Write(ySize);
-	bsOut->Write((a3i32)sendTime);
+	bsOut->Write((a3i32)sendTime -10);
 	peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 	return 0;
 }

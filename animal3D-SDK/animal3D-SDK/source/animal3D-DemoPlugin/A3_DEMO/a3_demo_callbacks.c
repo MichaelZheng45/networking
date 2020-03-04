@@ -348,35 +348,36 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 				a3i32 ownedCount = getOwnedList();
 				for (a3i32 i = 0; i < ownedCount; i++)
 				{
-					a3i32 xPos;
-					a3i32 yPos;
-
-					if (getOwnedUnit(i, &xPos, &yPos))
+					if (ownedUnitActive(i))
 					{
+						a3i32 xPos = getOwnedUnitX(i);
+						a3i32 yPos = getOwnedUnitY(i);
 						a3f32 height = (a3f32)demoState->windowHeight;
 						a3f32 width = (a3f32)demoState->windowWidth;
+					
 
-						a3textDraw(demoState->text, (a3f32)xPos / width, (a3f32)yPos / height, -1, 1, 0, 0, 1, "%i", i);
+						a3textDraw(demoState->text, (2 * (a3f32)xPos / width) - 1, (2 * (a3f32)yPos / height) - 1, -1, 1, 0, 0, 1, "%i", i);
 					}
 				}
 
 				a3i32 unOwnedCount = getUnownedList();
 				for (a3i32 i = 0; i < unOwnedCount; i++)
 				{
-					a3i32 xPos;
-					a3i32 yPos;
 
-					if (getUnownedUnit(i, &xPos, &yPos))
+					if (unownedUnitActive(i))
 					{
+
+						a3i32 xPos = getUnownedUnitX(i);
+						a3i32 yPos = getUnownedUnitY(i);
 						a3f32 height = (a3f32)demoState->windowHeight;
 						a3f32 width = (a3f32)demoState->windowWidth;
 
-						a3textDraw(demoState->text, (a3f32)xPos / width, (a3f32)yPos / height, -1, 0, 1, 0, 1, "%i", i);
+						a3textDraw(demoState->text, (2*(a3f32)xPos / width)-1, (2*(a3f32)yPos / height)-1, -1, 0, 1, 0, 1, "%i", i);
 					}
 				}
 			}
 		
-		//	a3netProcessEvents(demoState->net, demoState->game);
+			a3netWProcessEvents(demoState->net);
 
 		
 			// update input

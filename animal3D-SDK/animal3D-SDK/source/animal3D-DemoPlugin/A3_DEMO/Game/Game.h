@@ -18,7 +18,7 @@ class a3_Game
 {
 public:
 	static a3_Game* getInstance();
-	
+	static void createInstance(bool isServer, gameType id, a3i32 nxSize, a3i32 nySize);
 	void runGame();
 
 	static void initNetGame(gameType type, a3boolean isServer, a3i32 xSize, a3i32 ySize);

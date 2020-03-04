@@ -37,24 +37,40 @@ extern "C"
 		return 20;
 	}
 
-	a3boolean getUnownedUnit(a3i32 objID, a3i32 xPos, a3i32 yPos)
+	a3boolean unownedUnitActive(a3i32 objID)
 	{
-		a3_Unit unit = a3_Game::getInstance()->ownedUnits[objID];
-		xPos = unit.xPos;
-		yPos = unit.yPos;
+		a3_Unit unit = a3_Game::getInstance()->unownedUnit[objID];
 		return unit.active;
+	}
+
+	a3i32 getUnownedUnitX(a3i32 objID)
+	{
+		return a3_Game::getInstance()->unownedUnit[objID].xPos;
+	}
+
+	a3i32 getUnownedUnitY(a3i32 objID)
+	{
+		return a3_Game::getInstance()->unownedUnit[objID].yPos;
 	}
 
 	a3i32 getOwnedList()
 	{
 		return 20;
 	}
-	a3boolean getOwnedUnit(a3i32 objID, a3i32 xPos, a3i32 yPos)
+	a3boolean ownedUnitActive(a3i32 objID)
 	{
 		a3_Unit unit = a3_Game::getInstance()->ownedUnits[objID];
-		xPos = unit.xPos;
-		yPos = unit.yPos;
 		return unit.active;
+	}
+
+	a3i32 getOwnedUnitX(a3i32 objID)
+	{
+		return a3_Game::getInstance()->ownedUnits[objID].xPos;
+	}
+
+	a3i32 getOwnedUnitY(a3i32 objID)
+	{
+		return a3_Game::getInstance()->ownedUnits[objID].yPos;
 	}
 }
 

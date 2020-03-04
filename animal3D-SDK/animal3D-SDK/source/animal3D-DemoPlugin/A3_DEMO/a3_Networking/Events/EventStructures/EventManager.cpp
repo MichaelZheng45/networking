@@ -19,6 +19,7 @@ a3i32 EventManager::executeEvent()
 	//if head is not empty
 	if (current == nullptr)
 	{
+		return 0;
 	}
 
 	//reset head to the next one
@@ -27,7 +28,7 @@ a3i32 EventManager::executeEvent()
 	//get event
 	current->mEvent->executeOrder();
 	nodeCount--;
-
+	current->next = nullptr;
 	delete current;
 	//remove event
 	//delete current;

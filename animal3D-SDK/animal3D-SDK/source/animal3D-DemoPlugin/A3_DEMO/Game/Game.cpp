@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "A3_DEMO/a3_NetworkingManager.h"
+#include <time.h>
 a3_Game* a3_Game::instance = 0;
 
 a3_Game* a3_Game::getInstance()
@@ -7,8 +8,15 @@ a3_Game* a3_Game::getInstance()
 	return instance;
 }
 
+void a3_Game::createInstance(bool isServer, gameType id, a3i32 nxSize,a3i32 nySize)
+{
+	instance = new a3_Game(false, id, nxSize, nySize);
+}
+
 a3_Game::a3_Game(a3boolean isServer, gameType id, a3i32 nxSize, a3i32 nySize)
 {
+	srand(time(0));
+
 	server = isServer;
 	gameTypeID = id;
 	xSize = nxSize;
@@ -136,7 +144,7 @@ void a3_Game::runNetModeShared()
 		{
 			ownedUnits[i].yPos = ySize;
 		}
-		if (ownedUnits[i].yPos < ySize)
+		if (ownedUnits[i].yPos > ySize)
 		{
 			ownedUnits[i].yPos = 0;
 		}
@@ -166,7 +174,7 @@ void a3_Game::runNetModeCoupled()
 		{
 			ownedUnits[i].yPos = ySize;
 		}
-		if (ownedUnits[i].yPos < ySize)
+		if (ownedUnits[i].yPos > ySize)
 		{
 			ownedUnits[i].yPos = 0;
 		}

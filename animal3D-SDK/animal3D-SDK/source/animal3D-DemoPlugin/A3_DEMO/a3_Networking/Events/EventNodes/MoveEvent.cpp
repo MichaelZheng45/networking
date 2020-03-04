@@ -16,9 +16,11 @@ MoveEvent::MoveEvent(a3i32 objID, a3i32 newX, a3i32 newY, a3i32 addTime) : NetEv
 
 void MoveEvent::executeOrder()
 {
-	printf("Executing order move event on unit: " + mObjID );
-	printf(", timestamp: " + timeStamp);
 
 	a3_Game* gameInstance = a3_Game::getInstance();
-	gameInstance->moveUnit(mObjID, x, y);
+	if (gameInstance != 0 || gameInstance != nullptr)
+	{
+		gameInstance->moveUnit(mObjID, x, y);
+	}
+	
 }
