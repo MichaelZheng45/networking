@@ -3,7 +3,7 @@
 
 InitGameEvent::InitGameEvent(a3i32 newGameID, a3i32 addTime, a3i32 xSize, a3i32 ySize) : NetEvent( addTime)
 {
-	//messageType = ID_GAME_EVENT;
+	messageType = ID_GAME_INIT_EVENT;
 	type = newGameID;
 	xS = xSize;
 	yS = ySize;

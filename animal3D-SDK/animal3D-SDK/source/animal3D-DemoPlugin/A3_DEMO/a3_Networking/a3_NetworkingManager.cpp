@@ -138,7 +138,7 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 			RakNet::BitStream bs_in(packet->data, packet->length, false);
 			bs_in.Read(msg);
 
-			switch (msg)
+			switch (packet->data[0])
 			{
 				// check for timestamp and process
 			case ID_TIMESTAMP:
@@ -147,7 +147,7 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 				//printf("Clock diff: %u \n", (unsigned int)dt);
 				// do not break; proceed to default case to process actual message contents
 			default:
-				switch (msg)
+				switch (packet->data[0])
 				{
 				case ID_REMOTE_DISCONNECTION_NOTIFICATION:
 					printf("Another client has disconnected.\n");
@@ -193,10 +193,20 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 						RakNet::RakString rs;
 						RakNet::BitStream bsIn(packet->data, packet->length, false);
 						bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
-						bsIn.Read(rs);
-						InitGameEvent nEvent = *(InitGameEvent*)(rs.C_String());
-						eventMan->addEvent(&nEvent);
-						
+						//bsIn.Read(rs);
+						//InitGameEvent nEvent = *(InitGameEvent*)(rs.C_String());
+						//eventMan->addEvent(&nEvent);
+						a3i32 id;
+						a3i32 x;
+						a3i32 y;
+						a3i32 time;
+
+						bsIn.Read(id);
+						bsIn.Read(x);
+						bsIn.Read(y);
+						bsIn.Read(time);
+						InitGameEvent* nEvent = new InitGameEvent(id, time, x,y);
+						eventMan->addEvent(nEvent);
 					}
 					break;
 				case ID_GAME_MOVE_EVENT:
@@ -206,12 +216,20 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 						RakNet::RakString rs;
 						RakNet::BitStream bsIn(packet->data, packet->length, false);
 						bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
-						bsIn.Read(rs);
+						//bsIn.Read(rs);
+						//MoveEvent nEvent = *(MoveEvent*)(rs.C_String());
 						
-						MoveEvent nEvent = *(MoveEvent*)(rs.C_String());
-						nEvent;
-						eventMan->addEvent(&nEvent);
+						a3i32 id;
+						a3i32 x;
+						a3i32 y;
+						a3i32 time;
 
+						bsIn.Read(id);
+						bsIn.Read(x);
+						bsIn.Read(y);
+						bsIn.Read(time);
+						MoveEvent* nEvent = new MoveEvent(id,x,y,time);
+						eventMan->addEvent(nEvent);
 					}
 					break;
 				case ID_CLIENT_NOTIFIED:
@@ -297,24 +315,24 @@ a3i32 a3_NetworkingManager::a3netSendMoveEvent(a3i32 objID, a3i32 x, a3i32 y)
 	RakNet::Time sendTime = RakNet::GetTime();
 
 	//send message
-	//peer->Send(reinterpret_cast<char*>(&*moveEvent), sizeof(moveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(0), false);
+//	peer->Send(reinterpret_cast<char*>(&MoveEvent(objID, x, y, (a3i32)sendTime)), sizeof(MoveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(0), false);
+	
+	
 	char* mes = reinterpret_cast<char*>(&MoveEvent(objID, x, y, (a3i32)sendTime));
-
 	RakNet::BitStream bsOut[1];
 
 	bsOut->Write((RakNet::MessageID)ID_GAME_MOVE_EVENT);
 
-	RakNet::RakString rs;
-	rs.Set(mes);
-	bsOut->Write(rs);
+	//RakNet::RakString rs;
+	//rs.Set(mes, sizeof(MoveEvent));
+	//bsOut->Write(rs);
+	bsOut->Write(objID);
+	bsOut->Write(x);
+	bsOut->Write(y);
+	bsOut->Write((a3i32)sendTime);
 
+	//bsOut->Write((char*)&MoveEvent(objID, x, y, (a3i32)sendTime), sizeof(MoveEvent));
 	peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
-
-	mes = "";
-	int length = sizeof(rs.C_String());
-	std::strncpy(mes, rs.C_String(),length);
-	mes[length] = '\0';
-	MoveEvent oEvent = *(MoveEvent*)(mes);
 	return 0;
 }
 
@@ -331,10 +349,13 @@ a3i32 a3_NetworkingManager::a3netInitGameEvent(a3i32 id, a3i32 xSize, a3i32 ySiz
 
 	bsOut->Write((RakNet::MessageID)ID_GAME_INIT_EVENT);
 	
-	RakNet::RakString rs;
-	rs.Set(mes);
-	bsOut->Write(rs);
-
+	//RakNet::RakString rs;
+	//rs.Set(mes);
+	//bsOut->Write(rs);
+	bsOut->Write(id);
+	bsOut->Write(xSize);
+	bsOut->Write(ySize);
+	bsOut->Write((a3i32)sendTime);
 	peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 	return 0;
 }
