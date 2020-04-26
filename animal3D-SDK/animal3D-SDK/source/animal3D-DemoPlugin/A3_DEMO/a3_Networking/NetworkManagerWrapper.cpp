@@ -66,11 +66,7 @@ extern "C"
 		return 0;
 	}
 
-	a3i32 a3netWSendMoveEvent(a3_NetworkingManager* net, a3i32 objID, a3i32 x, a3i32 y)
-	{
-		net->a3netSendMoveEvent(objID, x, y);
-		return 0;
-	}
+
 
 	a3i32 a3netWSetType(a3_NetworkingManager* net, a3i32 type)
 	{

@@ -87,7 +87,7 @@ extern "C"
 	//	params x_ndc, y_ndc, z_ndc: the text's on-screen position in 
 	//		normalized device coordinates (NDC), all in range [-1, 1]
 	//	params r, g, b, a: 4-channel color of text, all in range [0, 1]
-	//	param format: formatting string like that of 'printf', followed by 
+	//	param format: formatting string like that of '', followed by 
 	//		optional variadic parameter list of format arguments
 	//	return: number of characters drawn
 	//	return: 0 if uninitialized or no characters drawn

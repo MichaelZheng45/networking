@@ -34,8 +34,6 @@ extern "C" {
 
 	a3i32 a3netWProcessEvents(a3_NetworkingManager* net);
 
-	a3i32 a3netWSendMoveEvent(a3_NetworkingManager* net, a3i32 objID, a3i32 x, a3i32 y);
-
 	a3i32 a3netWSetType(a3_NetworkingManager* net, a3i32 type);
 
 	a3i32 a3netSendInitGame(a3_NetworkingManager* net, a3i32 id, a3i32 xSize, a3i32 ySize);

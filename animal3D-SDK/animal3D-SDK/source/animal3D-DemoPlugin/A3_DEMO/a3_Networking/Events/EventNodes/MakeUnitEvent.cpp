@@ -12,5 +12,5 @@ void MakeUnitEvent::executeOrder()
 {
 	a3_Game* gameInstance = a3_Game::getInstance();
 
-	gameInstance->createUnowned(mObjID,x,y);
+	gameInstance->createUnowned(mObjID,x,y, 0 , 0, 0);
 }

@@ -334,8 +334,8 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 			//a3demo_input(demoState, demoState->renderTimer->secondsPerTick);
 			a3netWProcessInbound(demoState->net);
 			a3netWProcessOutbound(demoState->net);
-			
-			updateGame();
+			a3netWProcessEvents(demoState->net);
+			updateGame(demoState->renderTimer->secondsPerTick);
 			
 			a3f32 height = (a3f32)demoState->windowHeight;
 			a3f32 width = (a3f32)demoState->windowWidth;
@@ -376,9 +376,6 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 					}
 				}
 			}
-		
-			a3netWProcessEvents(demoState->net);
-
 		
 			// update input
 			a3mouseUpdate(demoState->mouse);

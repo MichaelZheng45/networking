@@ -9,7 +9,7 @@ extern "C" {
 #endif
 
 a3boolean checkInit();
-void updateGame();
+void updateGame(a3f64 tick);
 void initGame(a3i32 type, a3boolean isServer, a3i32 xSize, a3i32 ySize); 
 
 a3i32 getUnownedList();

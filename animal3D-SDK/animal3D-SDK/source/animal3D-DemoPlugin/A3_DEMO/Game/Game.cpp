@@ -36,15 +36,17 @@ a3_Game::a3_Game(a3boolean isServer, gameType id, a3i32 nxSize, a3i32 nySize)
 		{
 			for (a3i32 i = 0; i < 20; i++)
 			{
+				ownedUnits[i].unitID = i;
 				a3i32 xPos = rand() % xSize;
 				a3i32 yPos = rand() % ySize;
-				ownedUnits[i].xPos = xPos;
-				ownedUnits[i].yPos = yPos;
+				ownedUnits[i].position = makeVector(xPos, yPos);
 
-				ownedUnits[i].xDir = rand() % 7 + (-3);
-				ownedUnits[i].yDir = rand() % 7 + (-3);
+				a3i32 xDir = rand() % 7 + (-3);
+				a3i32 yDir = rand() % 7 + (-3);
+				ownedUnits[i].velocity = magnitude(makeVector(xDir,yDir));
+				ownedUnits[i].direction = normalize(makeVector(xDir, yDir));
 				ownedUnits[i].active = true;
-				moveUnitEventSend(i, xPos, yPos);
+				moveUnitEventSend(ownedUnits[i]);
 			}
 		}
 		//if not do nothing
@@ -54,15 +56,17 @@ a3_Game::a3_Game(a3boolean isServer, gameType id, a3i32 nxSize, a3i32 nySize)
 		// both generate owned units
 		for (a3i32 i = 0; i < 20; i++)
 		{
+			ownedUnits[i].unitID = i;
 			a3i32 xPos = rand() % xSize;
 			a3i32 yPos = rand() % ySize;
-			ownedUnits[i].xPos = xPos;
-			ownedUnits[i].yPos = yPos;
-
-			ownedUnits[i].xDir = rand() % 7 + (-3);
-			ownedUnits[i].yDir = rand() % 7 + (-3);
+			ownedUnits[i].position = makeVector(xPos, yPos);
+		
+			a3i32 xDir = rand() % 7 + (-3);
+			a3i32 yDir = rand() % 7 + (-3);
+			ownedUnits[i].velocity = magnitude(makeVector(xDir, yDir));
+			ownedUnits[i].direction = normalize(makeVector(xDir, yDir));
 			ownedUnits[i].active = true;
-			moveUnitEventSend(i, xPos, yPos);
+			moveUnitEventSend(ownedUnits[i]);
 		}
 		break;
 	default:
@@ -75,7 +79,7 @@ a3_Game::~a3_Game()
 
 }
 
-void a3_Game::runGame()
+void a3_Game::runGame(a3f64 tick)
 {
 	switch (gameTypeID)
 	{
@@ -86,7 +90,7 @@ void a3_Game::runGame()
 		runNetModeShared();
 		break;
 	case COUPLED_MODE:
-		runNetModeCoupled();
+		runNetModeCoupled(tick * 33);
 		break;
 	default:
 		break;
@@ -105,28 +109,26 @@ void a3_Game::runNetModePush()
 	{
 		for (a3i32 i = 0; i < 20; i++)
 		{
-			ownedUnits[i].xPos += ownedUnits[i].xDir;
-			ownedUnits[i].yPos += ownedUnits[i].yDir;
+			updateUnit(ownedUnits[i], 0);
+			
+			if (ownedUnits[i].position.xVal < 0)
+			{
+				ownedUnits[i].position.xVal = xSize;
+			}
+			if (ownedUnits[i].position.xVal > xSize)
+			{
+				ownedUnits[i].position.xVal = 0;
+			}
+			if (ownedUnits[i].position.yVal < 0)
+			{
+				ownedUnits[i].position.yVal = ySize;
+			}
+			if (ownedUnits[i].position.yVal > ySize)
+			{
+				ownedUnits[i].position.yVal = 0;
+			}
 
-			if (ownedUnits[i].xPos < 0)
-			{
-				ownedUnits[i].xPos = xSize;
-			}
-			if (ownedUnits[i].xPos > xSize)
-			{
-				ownedUnits[i].xPos = 0;
-			}
-			if (ownedUnits[i].yPos < 0)
-			{
-				ownedUnits[i].yPos = ySize;
-			}
-			if (ownedUnits[i].yPos > ySize)
-			{
-				ownedUnits[i].yPos = 0;
-			}
-
-			a3_NetworkingManager* netInstance = a3_NetworkingManager::getInstance();
-			netInstance->a3netSendMoveEvent(i, ownedUnits[i].xPos, ownedUnits[i].yPos);
+			moveUnitEventSend(ownedUnits[i]);
 		}
 	}
 }
@@ -136,79 +138,133 @@ void a3_Game::runNetModeShared()
 	//update owned units, send updated units
 	for (a3i32 i = 0; i < 20; i++)
 	{
-		ownedUnits[i].xPos += ownedUnits[i].xDir;
-		ownedUnits[i].yPos += ownedUnits[i].yDir;
+		updateUnit(ownedUnits[i], 0);
 
-		if (ownedUnits[i].xPos < 0)
+		if (ownedUnits[i].position.xVal < 0)
 		{
-			ownedUnits[i].xPos = xSize;
+			ownedUnits[i].position.xVal = xSize;
 		}
-		if (ownedUnits[i].xPos > xSize)
+		if (ownedUnits[i].position.xVal > xSize)
 		{
-			ownedUnits[i].xPos = 0;
+			ownedUnits[i].position.xVal = 0;
 		}
-		if (ownedUnits[i].yPos < 0)
+		if (ownedUnits[i].position.yVal < 0)
 		{
-			ownedUnits[i].yPos = ySize;
+			ownedUnits[i].position.yVal = ySize;
 		}
-		if (ownedUnits[i].yPos > ySize)
+		if (ownedUnits[i].position.yVal > ySize)
 		{
-			ownedUnits[i].yPos = 0;
+			ownedUnits[i].position.yVal = 0;
 		}
 
-		a3_NetworkingManager* netInstance = a3_NetworkingManager::getInstance();
-		netInstance->a3netSendMoveEvent(i, ownedUnits[i].xPos, ownedUnits[i].yPos);
+		moveUnitEventSend(ownedUnits[i]);
 	}
 }
 
-void a3_Game::runNetModeCoupled()
+void a3_Game::runNetModeCoupled(a3f64 tick)
 {
+	a3f32 timeDiff = tick;
 	//update owned units but also check with non owned units
 	for (a3i32 i = 0; i < 20; i++)
 	{
-		ownedUnits[i].xPos += ownedUnits[i].xDir;
-		ownedUnits[i].yPos += ownedUnits[i].yDir;
+		updateUnit(ownedUnits[i], timeDiff);
 
-		if (ownedUnits[i].xPos < 0)
+		if (ownedUnits[i].position.xVal < 0)
 		{
-			ownedUnits[i].xPos = xSize;
+			ownedUnits[i].position.xVal = xSize;
 		}
-		if (ownedUnits[i].xPos > xSize)
+		if (ownedUnits[i].position.xVal > xSize)
 		{
-			ownedUnits[i].xPos = 0;
+			ownedUnits[i].position.xVal = 0;
 		}
-		if (ownedUnits[i].yPos < 0)
+		if (ownedUnits[i].position.yVal < 0)
 		{
-			ownedUnits[i].yPos = ySize;
+			ownedUnits[i].position.yVal = ySize;
 		}
-		if (ownedUnits[i].yPos > ySize)
+		if (ownedUnits[i].position.yVal > ySize)
 		{
-			ownedUnits[i].yPos = 0;
+			ownedUnits[i].position.yVal = 0;
 		}
 
-		a3_NetworkingManager* netInstance = a3_NetworkingManager::getInstance();
-		netInstance->a3netSendMoveEvent(i, ownedUnits[i].xPos, ownedUnits[i].yPos);
+		for (int j = 0; j < 20; j++)
+		{
+			vectorsTwo diff = subtract(ownedUnits[i].position, unownedUnit[j].position);
+			//for each unowned unit, check for collision
+			if (magnitude(diff) < 20)
+			{
+				ownedUnits[i].direction = normalize(diff);
+			}
+		}
+
+		for (int k = 0; k < 20; k++)
+		{
+			vectorsTwo diff = subtract(ownedUnits[i].position, ownedUnits[k].position);
+			//for each unowned unit, check for collision
+			if (magnitude(diff) < 20 && i != k)
+			{
+				ownedUnits[i].direction = normalize(diff);
+			}
+		}
+
+		//remove this
+		//moveUnitEventSend(ownedUnits[i]);
 	}
-	//sned unit information
+
+	//send move event but only a select few
+	for (int i = 0; i < 2; i++)
+	{
+		moveUnitEventSend(ownedUnits[iterator]);
+		iterator++;
+		if (iterator >= 20)
+		{
+			iterator = 0;
+		}
+	}
+
+	//iterate through unownedlist
+	for (int i = 0; i < 20; i++)
+	{
+		//if the unit has not been updated, self update
+		if (unownedUnit[i].updatedThisFrame)
+		{
+			unownedUnit[i].updatedThisFrame = false;
+		}
+		else
+		{
+			updateUnit(unownedUnit[i], timeDiff);
+		}
+	}
+	
 }
 
-void a3_Game::moveUnitEventSend(a3i32 id, a3i32 xPos, a3i32 yPos)
+void a3_Game::moveUnitEventSend(a3_Unit unit)
 {
 	a3_NetworkingManager* netInstance = a3_NetworkingManager::getInstance();
-	netInstance->a3netSendMoveEvent(id, xPos, yPos);
+	netInstance->a3netSendMoveEvent(unit.unitID, unit.position.xVal, unit.position.yVal, unit.direction.xVal, unit.direction.yVal, unit.velocity);
 }
 
 
-void a3_Game::createUnowned(a3i32 objID, a3i32 newX, a3i32 newY)
+void a3_Game::createUnowned(a3i32 objID, a3f32 newX, a3f32 newY, a3f32 newXDir, a3f32 newYDir, a3f32 velocity)
 {
-	unownedUnit[objID].xPos = newX;
-	unownedUnit[objID].yPos = newY;
+	unownedUnit[objID].position.xVal = newX;
+	unownedUnit[objID].position.yVal = newY;
 	unownedUnit[objID].active = true;
+	unownedUnit[objID].updatedThisFrame = true;
+	unownedUnit[objID].direction.xVal = newXDir;
+	unownedUnit[objID].direction.yVal = newYDir;
+	unownedUnit[objID].velocity = velocity;
 }
 
-void a3_Game::moveUnit(a3i32 objID, a3i32 newX, a3i32 newY)
+void a3_Game::moveUnit(a3i32 objID, a3f32 newX, a3f32 newY, a3f32 newXDir, a3f32 newYDir, a3f32 velocity)
 {
-	unownedUnit[objID].xPos = newX;
-	unownedUnit[objID].yPos = newY;
-	unownedUnit[objID].active = true;
+	if (this != nullptr)
+	{
+		unownedUnit[objID].position.xVal = newX;
+		unownedUnit[objID].position.yVal = newY;
+		unownedUnit[objID].active = true;
+		unownedUnit[objID].updatedThisFrame = true;     
+		unownedUnit[objID].direction.xVal = newXDir;
+		unownedUnit[objID].direction.yVal = newYDir;
+		unownedUnit[objID].velocity = velocity;
+	}
 }

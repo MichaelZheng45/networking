@@ -188,7 +188,6 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 					break;
 				case ID_GAME_INIT_EVENT:
 					{
-						printf("Recieved Init Event, adding to eventmanager \n");
 						//MoveEvent nEvent = *(MoveEvent*)mes;
 						RakNet::RakString rs;
 						RakNet::BitStream bsIn(packet->data, packet->length, false);
@@ -200,11 +199,12 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 						a3i32 x;
 						a3i32 y;
 						a3i32 time;
-
+		
 						bsIn.Read(id);
 						bsIn.Read(x);
 						bsIn.Read(y);
 						bsIn.Read(time);
+					
 						InitGameEvent* nEvent = new InitGameEvent(id, time, x,y);
 						nEvent->executeOrder();
 					//	eventMan->addEvent(nEvent);
@@ -213,7 +213,6 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 					break;
 				case ID_GAME_MOVE_EVENT:
 					{
-						printf("Recieved Move Event, adding to eventmanager \n");
 						//MoveEvent nEvent = *(MoveEvent*)mes;
 						RakNet::RakString rs;
 						RakNet::BitStream bsIn(packet->data, packet->length, false);
@@ -222,18 +221,22 @@ a3i32 a3_NetworkingManager::a3netProcessInbound()
 						//MoveEvent nEvent = *(MoveEvent*)(rs.C_String());
 						
 						a3i32 id;
-						a3i32 x;
-						a3i32 y;
+						a3f32 x;
+						a3f32 y;
 						a3i32 time;
+						a3f32 xDir;
+						a3f32 yDir;
+						a3f32 velocity;
 
 						bsIn.Read(id);
 						bsIn.Read(x);
 						bsIn.Read(y);
 						bsIn.Read(time);
-						MoveEvent* nEvent = new MoveEvent(id,x,y,time);
+						bsIn.Read(xDir);
+						bsIn.Read(yDir);
+						bsIn.Read(velocity);
+						MoveEvent* nEvent = new MoveEvent(id,x,y,time, xDir, yDir, velocity);
 						eventMan->addEvent(nEvent);
-						char* mess = "okay";
-						printf(mess);
 					}
 					break;
 				case ID_CLIENT_NOTIFIED:
@@ -312,11 +315,10 @@ a3i32 a3_NetworkingManager::a3netProcessEvents()
 			eventMan->executeEvent();
 		}
 	}
-
 	return 0;
 }
 
-a3i32 a3_NetworkingManager::a3netSendMoveEvent(a3i32 objID, a3i32 x, a3i32 y)
+a3i32 a3_NetworkingManager::a3netSendMoveEvent(a3i32 objID, a3f32 x, a3f32 y, a3f32 xDir, a3f32 yDir, a3f32 velocity)
 {
 	RakNet::RakPeerInterface* peer = mPeer;
 	RakNet::Time sendTime = RakNet::GetTime();
@@ -325,7 +327,7 @@ a3i32 a3_NetworkingManager::a3netSendMoveEvent(a3i32 objID, a3i32 x, a3i32 y)
 //	peer->Send(reinterpret_cast<char*>(&MoveEvent(objID, x, y, (a3i32)sendTime)), sizeof(MoveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(0), false);
 	
 	
-	char* mes = reinterpret_cast<char*>(&MoveEvent(objID, x, y, (a3i32)sendTime));
+//	char* mes = reinterpret_cast<char*>(&MoveEvent(objID, x, y, (a3i32)sendTime));
 	RakNet::BitStream bsOut[1];
 
 	bsOut->Write((RakNet::MessageID)ID_GAME_MOVE_EVENT);
@@ -337,6 +339,9 @@ a3i32 a3_NetworkingManager::a3netSendMoveEvent(a3i32 objID, a3i32 x, a3i32 y)
 	bsOut->Write(x);
 	bsOut->Write(y);
 	bsOut->Write((a3i32)sendTime);
+	bsOut->Write(xDir);
+	bsOut->Write(yDir);
+	bsOut->Write(velocity);
 
 	//bsOut->Write((char*)&MoveEvent(objID, x, y, (a3i32)sendTime), sizeof(MoveEvent));
 	peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
@@ -350,7 +355,7 @@ a3i32 a3_NetworkingManager::a3netInitGameEvent(a3i32 id, a3i32 xSize, a3i32 ySiz
 
 	//send message
 	//peer->Send(reinterpret_cast<char*>(&*moveEvent), sizeof(moveEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(0), false);
-	char* mes = reinterpret_cast<char*>(&InitGameEvent(id, xSize, ySize, (a3i32)sendTime));
+	//char* mes = reinterpret_cast<char*>(&InitGameEvent(id, xSize, ySize, (a3i32)sendTime));
 
 	RakNet::BitStream bsOut[1];
 
@@ -372,4 +377,5 @@ a3i32 a3_NetworkingManager::a3netSetType(netType type)
 	networkType = type;
 	return 0;
 }
+
 //-----------------------------------------------------------------------------

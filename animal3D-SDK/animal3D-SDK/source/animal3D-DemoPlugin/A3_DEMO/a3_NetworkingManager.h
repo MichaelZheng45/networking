@@ -77,7 +77,7 @@
 
 		a3i32 a3netProcessEvents();
 
-		a3i32 a3netSendMoveEvent( a3i32 objID, a3i32 x, a3i32 y);
+		a3i32 a3netSendMoveEvent( a3i32 objID, a3f32 x, a3f32 y, a3f32 xDir, a3f32 yDir, a3f32 velocity);
 
 		a3i32 a3netInitGameEvent(a3i32 id, a3i32 xSize, a3i32 ySize);
 

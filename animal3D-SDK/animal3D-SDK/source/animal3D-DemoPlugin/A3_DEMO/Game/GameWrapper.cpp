@@ -14,12 +14,12 @@ extern "C"
 		return false;
 	}
 
-	void updateGame()
+	void updateGame(a3f64 tick)
 	{
 		a3_Game* gameIns = a3_Game::getInstance();
 		if (gameIns != 0)
 		{
-			gameIns->runGame();
+			gameIns->runGame(tick);
 		}
 	}
 
@@ -45,12 +45,12 @@ extern "C"
 
 	a3i32 getUnownedUnitX(a3i32 objID)
 	{
-		return a3_Game::getInstance()->unownedUnit[objID].xPos;
+		return a3_Game::getInstance()->unownedUnit[objID].position.xVal;
 	}
 
 	a3i32 getUnownedUnitY(a3i32 objID)
 	{
-		return a3_Game::getInstance()->unownedUnit[objID].yPos;
+		return a3_Game::getInstance()->unownedUnit[objID].position.yVal;
 	}
 
 	a3i32 getOwnedList()
@@ -65,12 +65,12 @@ extern "C"
 
 	a3i32 getOwnedUnitX(a3i32 objID)
 	{
-		return a3_Game::getInstance()->ownedUnits[objID].xPos;
+		return a3_Game::getInstance()->ownedUnits[objID].position.xVal;
 	}
 
 	a3i32 getOwnedUnitY(a3i32 objID)
 	{
-		return a3_Game::getInstance()->ownedUnits[objID].yPos;
+		return a3_Game::getInstance()->ownedUnits[objID].position.yVal;
 	}
 }
 

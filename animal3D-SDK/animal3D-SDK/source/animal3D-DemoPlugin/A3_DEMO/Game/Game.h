@@ -19,18 +19,18 @@ class a3_Game
 public:
 	static a3_Game* getInstance();
 	static void createInstance(bool isServer, gameType id, a3i32 nxSize, a3i32 nySize);
-	void runGame();
+	void runGame(a3f64 tick);
 
 	static void initNetGame(gameType type, a3boolean isServer, a3i32 xSize, a3i32 ySize);
 
 
 	void runNetModePush();
 	void runNetModeShared();
-	void runNetModeCoupled();
+	void runNetModeCoupled(a3f64 tick);
 
-	void moveUnitEventSend(a3i32 id, a3i32 xPos, a3i32 yPos);
-	void createUnowned(a3i32 objID, a3i32 newX, a3i32 newY);
-	void moveUnit(a3i32 objID, a3i32 newX, a3i32 newY);
+	void moveUnitEventSend(a3_Unit unit);
+	void createUnowned(a3i32 objID, a3f32 newX, a3f32 newY, a3f32 newXDir, a3f32 newYDir, a3f32 velocity);
+	void moveUnit(a3i32 objID, a3f32 newX, a3f32 newY, a3f32 newXDir, a3f32 newYDir, a3f32 velocity);
 
 	a3_Game(a3boolean isServer, gameType id, a3i32 xSize, a3i32 ySize);
 	~a3_Game();
@@ -47,6 +47,7 @@ public:
 	a3boolean server;
 	gameType gameTypeID;
 
+	a3i32 iterator = 0;
 };
 
 #else
